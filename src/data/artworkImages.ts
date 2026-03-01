@@ -8,7 +8,7 @@ import chrysanthemumsImg from "@/assets/artworks/chrysanthemums.jpg";
 import peoniesImg from "@/assets/artworks/peonies.jpg";
 import boncompainAnemonesImg from "@/assets/artworks/boncompain-anemones.jpg";
 
-// Source paintings (full original artwork for hover reveal)
+// Source paintings (full original artwork)
 import sunflowersSourceImg from "@/assets/artworks/sunflowers-source.jpg";
 import waterLiliesSourceImg from "@/assets/artworks/water-lilies-source.jpg";
 import irisesSourceImg from "@/assets/artworks/irises-source.jpg";
@@ -18,10 +18,26 @@ import rosesSourceImg from "@/assets/artworks/roses-source.jpg";
 import peoniesSourceImg from "@/assets/artworks/peonies-source.jpg";
 import boncompainAnemonesSourceImg from "@/assets/artworks/boncompain-anemones-source.jpg";
 
-// Pre-made transparent cutouts (AI-isolated from source paintings)
+// New source paintings
+import oleandersSourceImg from "@/assets/artworks/oleanders-source.jpg";
+import dahliaSourceImg from "@/assets/artworks/dahlia-source.jpg";
+import carnationSourceImg from "@/assets/artworks/carnation-source.jpg";
+import wisteriaSourceImg from "@/assets/artworks/wisteria-source.jpg";
+import lilacSourceImg from "@/assets/artworks/lilac-source.jpg";
+import magnoliaSourceImg from "@/assets/artworks/magnolia-source.jpg";
+import violetsSourceImg from "@/assets/artworks/violets-source.jpg";
+import tulipSourceImg from "@/assets/artworks/tulip-source.jpg";
+import daisySourceImg from "@/assets/artworks/daisy-source.jpg";
+import redonFlowersSourceImg from "@/assets/artworks/redon-flowers-source.jpg";
+import ruyschFlowersSourceImg from "@/assets/artworks/ruysch-flowers-source.jpg";
+import bosschaertTulipSourceImg from "@/assets/artworks/bosschaert-tulip-source.jpg";
+import carnationLilyRoseSourceImg from "@/assets/artworks/carnation-lily-rose-source.jpg";
+
+// Pre-made transparent cutouts
 import rosesCutoutImg from "@/assets/artworks/roses-cutout.png";
 import sunflowerCutoutImg from "@/assets/artworks/sunflower-cutout.png";
-// Sticker cut-outs (on paper texture)
+
+// Sticker cut-outs
 import sunflowersStickerImg from "@/assets/artworks/sunflowers-sticker.png";
 import waterLiliesStickerImg from "@/assets/artworks/water-lilies-sticker.png";
 import irisesStickerImg from "@/assets/artworks/irises-sticker.png";
@@ -30,6 +46,7 @@ import almondBlossomStickerImg from "@/assets/artworks/almond-blossom-sticker.pn
 import rosesStickerImg from "@/assets/artworks/roses-sticker.png";
 import chrysanthemumsStickerImg from "@/assets/artworks/chrysanthemums-sticker.png";
 import boncompainAnemonesStickerImg from "@/assets/artworks/boncompain-anemones-sticker.png";
+import lotusStickerImg from "@/assets/artworks/lotus-sticker.png";
 
 export const artworkImages: Record<string, string> = {
   sunflower: sunflowersImg,
@@ -53,6 +70,20 @@ export const artworkSourceImages: Record<string, string> = {
   chrysanthemum: chrysanthemumsImg,
   peony: peoniesSourceImg,
   anemone: boncompainAnemonesSourceImg,
+  // New entries
+  oleander: oleandersSourceImg,
+  dahlia: dahliaSourceImg,
+  carnation: carnationSourceImg,
+  wisteria: wisteriaSourceImg,
+  lilac: lilacSourceImg,
+  magnolia: magnoliaSourceImg,
+  violet: violetsSourceImg,
+  tulip: tulipSourceImg,
+  daisy: daisySourceImg,
+  "redon-bouquet": redonFlowersSourceImg,
+  "ruysch-bouquet": ruyschFlowersSourceImg,
+  "bosschaert-tulip": bosschaertTulipSourceImg,
+  "carnation-lily-rose": carnationLilyRoseSourceImg,
 };
 
 export const artworkStickerImages: Record<string, string> = {
@@ -66,7 +97,7 @@ export const artworkStickerImages: Record<string, string> = {
   anemone: boncompainAnemonesStickerImg,
 };
 
-/** Pre-made transparent cutouts — used instead of runtime segmentation when available */
+/** Pre-made transparent cutouts */
 export const artworkCutoutImages: Record<string, string> = {
   rose: rosesCutoutImg,
   sunflower: sunflowerCutoutImg,

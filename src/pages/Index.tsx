@@ -1,27 +1,26 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import MoodInput from "@/components/MoodInput";
-import FlowerResult from "@/components/FlowerResult";
-import { findFlowerForMood, ArtFlower } from "@/data/artFlowers";
+import BouquetResult from "@/components/BouquetResult";
+import { findFlowersForMood, ArtFlower } from "@/data/artFlowers";
 
 const Index = () => {
-  const [flower, setFlower] = useState<ArtFlower | null>(null);
+  const [flowers, setFlowers] = useState<ArtFlower[] | null>(null);
   const [userMood, setUserMood] = useState("");
 
   const handleMoodSubmit = (mood: string) => {
     setUserMood(mood);
-    const matched = findFlowerForMood(mood);
-    setFlower(matched);
+    const matched = findFlowersForMood(mood, 3);
+    setFlowers(matched);
   };
 
   const handleReset = () => {
-    setFlower(null);
+    setFlowers(null);
     setUserMood("");
   };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
       <header className="py-4 px-6 text-center shrink-0">
         <motion.p
           className="font-serif text-sm tracking-[0.3em] uppercase text-muted-foreground"
@@ -33,10 +32,9 @@ const Index = () => {
         </motion.p>
       </header>
 
-      {/* Main content */}
-      <main className={`flex items-start justify-center ${!flower ? 'flex-1 items-center' : 'pt-2 pb-6'}`}>
+      <main className={`flex items-start justify-center ${!flowers ? 'flex-1 items-center' : 'pt-2 pb-6'}`}>
         <AnimatePresence mode="wait">
-          {!flower ? (
+          {!flowers ? (
             <motion.div
               key="input"
               exit={{ opacity: 0, y: -30 }}
@@ -53,8 +51,8 @@ const Index = () => {
               transition={{ duration: 0.5 }}
               className="w-full"
             >
-              <FlowerResult
-                flower={flower}
+              <BouquetResult
+                flowers={flowers}
                 userMood={userMood}
                 onReset={handleReset}
               />
@@ -63,7 +61,6 @@ const Index = () => {
         </AnimatePresence>
       </main>
 
-      {/* Footer */}
       <footer className="py-4 text-center shrink-0">
         <p className="text-muted-foreground/40 text-xs font-sans">
           Flowers from masterpieces, chosen for your heart
