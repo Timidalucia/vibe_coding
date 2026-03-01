@@ -31,7 +31,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
 
   useEffect(() => {
     if (sourceSrc && region) {
-      extractCutout(sourceSrc, region, 480).then((url) => {
+      extractCutout(sourceSrc, region, 600).then((url) => {
         if (url) setCutoutSrc(url);
       });
     }
@@ -42,31 +42,14 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="flex flex-col items-center w-full max-w-2xl mx-auto px-4 md:px-6"
+      className="flex flex-col items-center w-full max-w-[760px] mx-auto px-4"
     >
-      {/* PreviewReveal — collapsible painting container */}
+      {/* FlowerStage — fixed height, no layout shift */}
       <div
-        className="relative w-full max-w-xs md:max-w-sm mx-auto overflow-hidden rounded-2xl transition-[height] duration-[400ms] ease-in-out motion-reduce:transition-none"
+        className="relative w-full overflow-hidden rounded-2xl cursor-pointer"
         style={{
-          height: isHovered
-            ? "clamp(320px, 45vw, 480px)"
-            : "clamp(100px, 15vw, 160px)",
+          height: "clamp(280px, 40vw, 420px)",
         }}
-      >
-        <img
-          src={sourceSrc}
-          alt={`${flower.artwork} by ${flower.artist}`}
-          className="absolute inset-0 w-full h-full object-cover rounded-2xl transition-opacity duration-[350ms] ease-in-out motion-reduce:transition-none"
-          style={{ opacity: isHovered ? 1 : 0, pointerEvents: "none" }}
-          onError={(e) => {
-            (e.target as HTMLImageElement).style.display = "none";
-          }}
-        />
-      </div>
-
-      {/* Flower cutout — derived from the same painting at runtime */}
-      <div
-        className="relative z-10 -mt-16 md:-mt-20 cursor-pointer"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onClick={() => setIsModalOpen(true)}
@@ -80,19 +63,32 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         role="button"
         aria-label={`View ${flower.artwork} by ${flower.artist}`}
       >
-        {cutoutSrc ? (
-          <motion.img
-            src={cutoutSrc}
-            alt={`${flower.name} — extracted from ${flower.artwork}`}
-            className="w-24 h-28 md:w-32 md:h-40 object-contain transition-opacity duration-[350ms] ease-in-out motion-reduce:transition-none"
-            style={{ opacity: isHovered ? 0.15 : 1 }}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: isHovered ? 0.15 : 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-          />
-        ) : (
-          <div className="w-24 h-28 md:w-32 md:h-40 bg-muted/30 rounded-full" />
-        )}
+        {/* Layer 1: Flower crop (default visible) */}
+        <div
+          className="absolute inset-0 flex items-center justify-center transition-opacity duration-[350ms] ease-in-out motion-reduce:transition-none"
+          style={{ opacity: isHovered ? 0 : 1 }}
+        >
+          {cutoutSrc ? (
+            <img
+              src={cutoutSrc}
+              alt={`${flower.name} — from ${flower.artwork}`}
+              className="max-h-[70%] max-w-[80%] object-contain"
+            />
+          ) : (
+            <div className="w-40 h-48 bg-muted/20 rounded-lg animate-pulse" />
+          )}
+        </div>
+
+        {/* Layer 2: Full painting (visible on hover) — pointer-events:none */}
+        <img
+          src={sourceSrc}
+          alt={`${flower.artwork} by ${flower.artist}`}
+          className="absolute inset-0 w-full h-full object-cover rounded-2xl transition-opacity duration-[350ms] ease-in-out motion-reduce:transition-none"
+          style={{ opacity: isHovered ? 1 : 0, pointerEvents: "none" }}
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = "none";
+          }}
+        />
       </div>
 
       {/* Attribution */}
@@ -100,7 +96,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         className="text-muted-foreground text-center text-sm mt-3 mb-2 font-sans"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.4 }}
+        transition={{ delay: 0.4, duration: 0.4 }}
       >
         from <span className="font-serif italic">"{flower.artwork}"</span> by{" "}
         {flower.artist}, {flower.year}
@@ -110,7 +106,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         className="w-12 h-px bg-border mb-3"
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
-        transition={{ delay: 0.6, duration: 0.4 }}
+        transition={{ delay: 0.5, duration: 0.4 }}
       />
 
       {/* Description */}
@@ -118,18 +114,18 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         className="text-foreground/80 text-center text-sm md:text-base leading-relaxed mb-4 font-sans max-w-lg"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.7, duration: 0.5 }}
+        transition={{ delay: 0.6, duration: 0.5 }}
       >
         {flower.description}
       </motion.p>
 
       {/* Healing message */}
       <motion.div
-        className="w-full max-w-lg rounded-2xl p-4 md:p-6 mb-6"
+        className="w-full max-w-lg rounded-2xl p-4 md:p-5 mb-5"
         style={{ backgroundColor: `hsl(${flower.color} / 0.08)` }}
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.9, duration: 0.5 }}
+        transition={{ delay: 0.8, duration: 0.5 }}
       >
         <p className="font-serif italic text-xs text-muted-foreground mb-2">
           Why this flower is for you
@@ -143,7 +139,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.4 }}
+        transition={{ delay: 1, duration: 0.4 }}
       >
         <Button
           onClick={onReset}
