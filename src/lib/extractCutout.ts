@@ -1,35 +1,27 @@
 /**
- * Runtime flower crop extraction from source paintings.
- * Crops a rectangular region and applies subtle edge feathering —
- * NO circular/ellipse mask. The result is a large rectangular cutout.
+ * Runtime flower crop from source paintings.
+ * Crops a rectangular region — NO circular mask.
+ * Subtle edge feathering only (thin border fade).
  */
 
 const cache = new Map<string, string>();
 
 export interface CutoutRegion {
-  /** Crop rectangle as fractions of image dimensions (0–1) */
   x: number;
   y: number;
   w: number;
   h: number;
-  /** Kept for compatibility but ignored — always rectangular now */
   mask?: string;
   rotation?: number;
 }
 
-/**
- * Extract a rectangular flower crop from a painting image at runtime.
- * Returns a PNG dataURL — rectangular, no circle mask.
- */
 export function extractCutout(
   paintingSrc: string,
   region: CutoutRegion,
-  outputSize = 480
+  outputSize = 600
 ): Promise<string> {
   const cacheKey = `${paintingSrc}:${JSON.stringify(region)}`;
-  if (cache.has(cacheKey)) {
-    return Promise.resolve(cache.get(cacheKey)!);
-  }
+  if (cache.has(cacheKey)) return Promise.resolve(cache.get(cacheKey)!);
 
   return new Promise((resolve) => {
     const img = new Image();
@@ -45,7 +37,6 @@ export function extractCutout(
         const cw = Math.round(region.w * srcW);
         const ch = Math.round(region.h * srcH);
 
-        // Output canvas — maintain aspect ratio
         const aspect = cw / ch;
         const outW = aspect >= 1 ? outputSize : Math.round(outputSize * aspect);
         const outH = aspect >= 1 ? Math.round(outputSize / aspect) : outputSize;
@@ -55,48 +46,45 @@ export function extractCutout(
         canvas.height = outH;
         const ctx = canvas.getContext("2d")!;
 
-        if (region.rotation) {
-          ctx.translate(outW / 2, outH / 2);
-          ctx.rotate((region.rotation * Math.PI) / 180);
-          ctx.translate(-outW / 2, -outH / 2);
-        }
-
-        // Draw cropped region — full rectangle, no clip mask
+        // Draw the cropped region — full rectangle, no clipping
         ctx.drawImage(img, cx, cy, cw, ch, 0, 0, outW, outH);
 
-        // Subtle rectangular edge feathering (inset box shadow effect)
-        const feather = Math.min(outW, outH) * 0.08;
-        const edgeCanvas = document.createElement("canvas");
-        edgeCanvas.width = outW;
-        edgeCanvas.height = outH;
-        const edgeCtx = edgeCanvas.getContext("2d")!;
+        // Very subtle edge fade (only outermost 5% of each edge)
+        const feather = Math.min(outW, outH) * 0.05;
+        if (feather > 2) {
+          const edgeCanvas = document.createElement("canvas");
+          edgeCanvas.width = outW;
+          edgeCanvas.height = outH;
+          const ec = edgeCanvas.getContext("2d")!;
 
-        // Fill opaque center, transparent edges
-        edgeCtx.fillStyle = "#000";
-        edgeCtx.fillRect(0, 0, outW, outH);
+          // Start fully opaque
+          ec.fillStyle = "#000";
+          ec.fillRect(0, 0, outW, outH);
 
-        // Feather all 4 edges with linear gradients
-        const sides = [
-          { x0: 0, y0: 0, x1: feather, y1: 0, rect: [0, 0, feather, outH] },
-          { x0: outW, y0: 0, x1: outW - feather, y1: 0, rect: [outW - feather, 0, feather, outH] },
-          { x0: 0, y0: 0, x1: 0, y1: feather, rect: [0, 0, outW, feather] },
-          { x0: 0, y0: outH, x1: 0, y1: outH - feather, rect: [0, outH - feather, outW, feather] },
-        ] as const;
+          // Fade each edge
+          ec.globalCompositeOperation = "destination-out";
+          const edges = [
+            { x0: 0, y0: 0, x1: feather, y1: 0, r: [0, 0, feather, outH] },
+            { x0: outW, y0: 0, x1: outW - feather, y1: 0, r: [outW - feather, 0, feather, outH] },
+            { x0: 0, y0: 0, x1: 0, y1: feather, r: [0, 0, outW, feather] },
+            { x0: 0, y0: outH, x1: 0, y1: outH - feather, r: [0, outH - feather, outW, feather] },
+          ] as const;
 
-        edgeCtx.globalCompositeOperation = "destination-in";
-        for (const s of sides) {
-          const g = edgeCtx.createLinearGradient(s.x0, s.y0, s.x1, s.y1);
-          g.addColorStop(0, "rgba(0,0,0,0)");
-          g.addColorStop(1, "rgba(0,0,0,1)");
-          edgeCtx.fillStyle = g;
-          edgeCtx.fillRect(s.rect[0], s.rect[1], s.rect[2], s.rect[3]);
+          for (const e of edges) {
+            const g = ec.createLinearGradient(e.x0, e.y0, e.x1, e.y1);
+            g.addColorStop(0, "rgba(0,0,0,1)");
+            g.addColorStop(1, "rgba(0,0,0,0)");
+            ec.fillStyle = g;
+            ec.fillRect(e.r[0], e.r[1], e.r[2], e.r[3]);
+          }
+
+          ctx.globalCompositeOperation = "destination-in";
+          ctx.drawImage(edgeCanvas, 0, 0);
         }
-
-        ctx.globalCompositeOperation = "destination-in";
-        ctx.drawImage(edgeCanvas, 0, 0);
 
         const dataUrl = canvas.toDataURL("image/png");
         cache.set(cacheKey, dataUrl);
+        console.log("[extractCutout] Success:", outW, "x", outH);
         resolve(dataUrl);
       } catch (err) {
         console.warn("[extractCutout] Failed:", err);
@@ -105,7 +93,7 @@ export function extractCutout(
     };
 
     img.onerror = () => {
-      console.warn("[extractCutout] Image load failed");
+      console.warn("[extractCutout] Image load failed for", paintingSrc);
       resolve("");
     };
 
