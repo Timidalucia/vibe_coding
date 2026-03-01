@@ -39,12 +39,12 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="flex flex-col items-center w-full max-w-3xl mx-auto px-4 md:px-6"
+      className="flex flex-col items-center w-full max-w-2xl mx-auto px-4 md:px-6"
     >
       {/* Interactive sticker area */}
       <motion.div
-        className="relative w-full max-w-lg cursor-pointer"
-        style={{ aspectRatio: "1 / 1" }}
+        className="relative w-full max-w-xs md:max-w-sm cursor-pointer"
+        style={{ aspectRatio: "3 / 4" }}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
@@ -73,11 +73,11 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         />
 
         {/* Flower cut-out — exact uploaded PNG, no effects */}
-        <div className="absolute inset-0 flex items-center justify-center p-8">
+        <div className="absolute inset-0 flex items-center justify-center p-4">
           <img
             src={processedSticker || rawStickerSrc}
             alt={`${flower.name} — cut-out from ${flower.artwork}`}
-            className="max-w-[80%] max-h-[80%] object-contain transition-opacity duration-[400ms] ease-in-out"
+            className="max-w-[90%] max-h-[90%] object-contain transition-opacity duration-[400ms] ease-in-out"
             style={{
               opacity: isHovered ? 0.12 : 1,
             }}
