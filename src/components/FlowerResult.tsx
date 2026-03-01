@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArtFlower } from "@/data/artFlowers";
 import { artworkSourceImages, artworkStickerImages } from "@/data/artworkImages";
+import { removeBackground } from "@/lib/removeBackground";
 
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
@@ -22,9 +23,16 @@ interface FlowerResultProps {
 const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [processedSticker, setProcessedSticker] = useState<string | null>(null);
 
-  const stickerSrc = artworkStickerImages[flower.id];
+  const rawStickerSrc = artworkStickerImages[flower.id];
   const sourceSrc = artworkSourceImages[flower.id];
+
+  useEffect(() => {
+    if (rawStickerSrc) {
+      removeBackground(rawStickerSrc).then(setProcessedSticker);
+    }
+  }, [rawStickerSrc]);
 
   return (
     <motion.div
@@ -67,7 +75,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         {/* Flower cut-out — exact uploaded PNG, no effects */}
         <div className="absolute inset-0 flex items-center justify-center p-8">
           <img
-            src={stickerSrc}
+            src={processedSticker || rawStickerSrc}
             alt={`${flower.name} — cut-out from ${flower.artwork}`}
             className="max-w-[80%] max-h-[80%] object-contain transition-opacity duration-[400ms] ease-in-out"
             style={{
