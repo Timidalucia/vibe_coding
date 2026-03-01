@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ArtFlower } from "@/data/artFlowers";
 import { artworkSourceImages } from "@/data/artworkImages";
@@ -25,6 +25,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [cutoutSrc, setCutoutSrc] = useState<string>("");
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const sourceSrc = artworkSourceImages[flower.id];
   const region = flowerCutoutRegions[flower.id];
@@ -37,6 +38,21 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
     }
   }, [sourceSrc, region]);
 
+  // Debounced hover to prevent flicker
+  const handleEnter = useCallback(() => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    hoverTimer.current = setTimeout(() => setIsHovered(true), 100);
+  }, []);
+
+  const handleLeave = useCallback(() => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    hoverTimer.current = setTimeout(() => setIsHovered(false), 100);
+  }, []);
+
+  useEffect(() => {
+    return () => { if (hoverTimer.current) clearTimeout(hoverTimer.current); };
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -44,14 +60,12 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
       transition={{ duration: 0.6 }}
       className="flex flex-col items-center w-full max-w-[760px] mx-auto px-4"
     >
-      {/* FlowerStage — fixed height, no layout shift */}
+      {/* FlowerStage — fixed height, stable hover hitbox */}
       <div
         className="relative w-full overflow-hidden rounded-2xl cursor-pointer"
-        style={{
-          height: "clamp(280px, 40vw, 420px)",
-        }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        style={{ height: "clamp(240px, 35vw, 320px)" }}
+        onMouseEnter={handleEnter}
+        onMouseLeave={handleLeave}
         onClick={() => setIsModalOpen(true)}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
@@ -63,32 +77,31 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         role="button"
         aria-label={`View ${flower.artwork} by ${flower.artist}`}
       >
-        {/* Layer 1: Flower crop (default visible) */}
-        <div
-          className="absolute inset-0 flex items-center justify-center transition-opacity duration-[350ms] ease-in-out motion-reduce:transition-none"
-          style={{ opacity: isHovered ? 0 : 1 }}
-        >
-          {cutoutSrc ? (
-            <img
-              src={cutoutSrc}
-              alt={`${flower.name} — from ${flower.artwork}`}
-              className="max-h-[70%] max-w-[80%] object-contain"
-            />
-          ) : (
-            <div className="w-40 h-48 bg-muted/20 rounded-lg animate-pulse" />
-          )}
-        </div>
-
-        {/* Layer 2: Full painting (visible on hover) — pointer-events:none */}
+        {/* Layer 1 (back): Full painting — always in DOM, opacity only */}
         <img
           src={sourceSrc}
           alt={`${flower.artwork} by ${flower.artist}`}
           className="absolute inset-0 w-full h-full object-cover rounded-2xl transition-opacity duration-[350ms] ease-in-out motion-reduce:transition-none"
           style={{ opacity: isHovered ? 1 : 0, pointerEvents: "none" }}
-          onError={(e) => {
-            (e.target as HTMLImageElement).style.display = "none";
-          }}
+          onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
         />
+
+        {/* Layer 2 (front): Flower cutout — large, centered, always in DOM */}
+        <div
+          className="absolute inset-0 flex items-center justify-center transition-opacity duration-[350ms] ease-in-out motion-reduce:transition-none"
+          style={{ opacity: isHovered ? 0.12 : 1 }}
+        >
+          {cutoutSrc ? (
+            <img
+              src={cutoutSrc}
+              alt={`${flower.name} — from ${flower.artwork}`}
+              className="object-contain"
+              style={{ height: "clamp(120px, 22vw, 170px)" }}
+            />
+          ) : (
+            <div className="w-32 h-40 bg-muted/20 rounded-lg animate-pulse" />
+          )}
+        </div>
       </div>
 
       {/* Attribution */}
