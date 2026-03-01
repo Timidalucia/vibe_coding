@@ -69,7 +69,6 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
             className="max-w-[80%] max-h-[80%] object-contain transition-opacity duration-500 ease-in-out"
             style={{
               opacity: isHovered ? 0.12 : 1,
-              filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.10))",
             }}
           />
         </div>
