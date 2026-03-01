@@ -20,6 +20,7 @@ import boncompainAnemonesSourceImg from "@/assets/artworks/boncompain-anemones-s
 
 // Pre-made transparent cutouts (AI-isolated from source paintings)
 import rosesCutoutImg from "@/assets/artworks/roses-cutout.png";
+import sunflowerCutoutImg from "@/assets/artworks/sunflower-cutout.png";
 // Sticker cut-outs (on paper texture)
 import sunflowersStickerImg from "@/assets/artworks/sunflowers-sticker.png";
 import waterLiliesStickerImg from "@/assets/artworks/water-lilies-sticker.png";
@@ -68,4 +69,5 @@ export const artworkStickerImages: Record<string, string> = {
 /** Pre-made transparent cutouts — used instead of runtime segmentation when available */
 export const artworkCutoutImages: Record<string, string> = {
   rose: rosesCutoutImg,
+  sunflower: sunflowerCutoutImg,
 };
