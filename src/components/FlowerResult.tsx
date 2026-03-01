@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArtFlower } from "@/data/artFlowers";
 import { artworkSourceImages, artworkStickerImages } from "@/data/artworkImages";
-import paperTexture from "@/assets/paper-texture.jpg";
+
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
 import {
@@ -35,7 +35,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
     >
       {/* Interactive sticker area */}
       <motion.div
-        className="relative w-full max-w-lg rounded-2xl overflow-hidden cursor-pointer"
+        className="relative w-full max-w-lg rounded-2xl overflow-hidden cursor-pointer bg-background"
         style={{ aspectRatio: "1 / 1" }}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -53,33 +53,23 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         role="button"
         aria-label={`View ${flower.artwork} by ${flower.artist}`}
       >
-        {/* Paper texture background */}
-        <img
-          src={paperTexture}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-
         {/* Original painting (revealed on hover) */}
         <img
           src={sourceSrc}
           alt={`${flower.artwork} by ${flower.artist}`}
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ease-in-out"
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out"
           style={{ opacity: isHovered ? 1 : 0 }}
         />
 
-        {/* Sticker cut-out */}
+        {/* Flower cut-out */}
         <div className="absolute inset-0 flex items-center justify-center p-8">
           <img
             src={stickerSrc}
             alt={`${flower.name} — cut-out from ${flower.artwork}`}
-            className="max-w-[80%] max-h-[80%] object-contain transition-opacity duration-300 ease-in-out"
+            className="max-w-[80%] max-h-[80%] object-contain transition-opacity duration-500 ease-in-out"
             style={{
-              opacity: isHovered ? 0.15 : 1,
-              filter: isHovered
-                ? "drop-shadow(0 4px 12px rgba(0,0,0,0.1))"
-                : "drop-shadow(0 0 3px rgba(255,253,245,1)) drop-shadow(0 0 3px rgba(255,253,245,1)) drop-shadow(0 0 3px rgba(255,253,245,1)) drop-shadow(0 6px 20px rgba(0,0,0,0.18))",
+              opacity: isHovered ? 0.12 : 1,
+              filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.10))",
             }}
           />
         </div>
@@ -144,12 +134,22 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
           <div className="p-6 md:p-8">
             <DialogHeader>
               <DialogTitle className="font-serif text-xl md:text-2xl">
-                {flower.artist} — {flower.artwork} ({flower.year})
+                {flower.artist} — <span className="italic">{flower.artwork}</span> ({flower.year})
               </DialogTitle>
               <DialogDescription className="text-base leading-relaxed mt-4">
                 {flower.description}
               </DialogDescription>
             </DialogHeader>
+            {flower.sourceUrl && (
+              <a
+                href={flower.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block text-xs text-muted-foreground/60 hover:text-muted-foreground mt-4 underline underline-offset-2"
+              >
+                Source: Wikimedia Commons
+              </a>
+            )}
           </div>
         </DialogContent>
       </Dialog>

@@ -8,6 +8,7 @@ export interface ArtFlower {
   description: string;
   healingMessage: string;
   color: string; // HSL accent for the card
+  sourceUrl?: string;
 }
 
 export const artFlowers: ArtFlower[] = [
@@ -21,6 +22,7 @@ export const artFlowers: ArtFlower[] = [
     description: "Van Gogh painted his iconic Sunflowers as a symbol of gratitude and warmth. Each petal holds the radiance of a sun that refuses to set.",
     healingMessage: "We chose this sunflower for you because even in your darkest moments, there is a light turning toward you. Van Gogh painted these during his own struggles, yet poured golden joy onto canvas. Let this sunflower remind you that beauty persists — and so will you.",
     color: "45 90% 55%",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Vincent_Willem_van_Gogh_127.jpg",
   },
   {
     id: "water-lily",
@@ -32,6 +34,7 @@ export const artFlowers: ArtFlower[] = [
     description: "Monet's Water Lilies float in a world of stillness, painted from his garden in Giverny — a sanctuary he built to quiet the noise of the world.",
     healingMessage: "This water lily drifts to you as a reminder to breathe. Monet spent decades painting these serene ponds, finding peace in repetition and reflection. Let this flower be your still water — a place where your racing thoughts can finally rest.",
     color: "220 40% 65%",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Claude_Monet_-_Water_Lilies_-_1906,_Ryerson.jpg",
   },
   {
     id: "iris",
@@ -43,6 +46,7 @@ export const artFlowers: ArtFlower[] = [
     description: "Painted during Van Gogh's time at the Saint-Rémy asylum, the Irises stand bold and alive — proof that clarity can bloom in chaos.",
     healingMessage: "When the path feels unclear, we send you Van Gogh's iris. He painted these while finding his way through darkness, and yet each bloom pulses with purpose. You don't need to see the whole garden — just the next petal unfolding.",
     color: "270 45% 50%",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Irises-Vincent_van_Gogh.jpg",
   },
   {
     id: "red-poppy",
@@ -54,6 +58,7 @@ export const artFlowers: ArtFlower[] = [
     description: "O'Keeffe magnified her poppies to fill the entire canvas, demanding that the world slow down and truly see their fierce, tender beauty.",
     healingMessage: "Your fire deserves to be seen. O'Keeffe painted this poppy enormous because she believed small things deserve monumental attention. Channel your intensity — it is not a flaw, it is your power. This flower burns as brightly as you do.",
     color: "5 75% 50%",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Georgia_O%27Keeffe._Oriental_Poppies._1927.jpg",
   },
   {
     id: "almond-blossom",
@@ -65,6 +70,7 @@ export const artFlowers: ArtFlower[] = [
     description: "Van Gogh painted the almond blossoms for his newborn nephew — a celebration of new life against a sky of infinite possibility.",
     healingMessage: "How beautiful that you carry hope today. This almond blossom was Van Gogh's gift of joy, painted to welcome new beginnings. Like these branches against the February sky, your optimism is brave and precious. Nurture it.",
     color: "195 50% 70%",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Vincent_van_Gogh_-_Almond_blossom_-_Google_Art_Project.jpg",
   },
   {
     id: "rose",
@@ -76,6 +82,7 @@ export const artFlowers: ArtFlower[] = [
     description: "Renoir's roses glow with the soft warmth of an afternoon spent in good company — petals so tender they seem to breathe.",
     healingMessage: "You are in a gentle place, and you deserve this gentle flower. Renoir painted roses with arthritic hands, finding beauty despite pain. Your happiness matters. Hold it close like these layered petals — each one a reason to smile.",
     color: "340 55% 65%",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Pierre-Auguste_Renoir_-_Roses_dans_un_vase.jpg",
   },
   {
     id: "chrysanthemum",
@@ -87,6 +94,7 @@ export const artFlowers: ArtFlower[] = [
     description: "In East Asian tradition, the chrysanthemum symbolizes resilience and reflection. Qi Baishi painted them with ink that whispers of autumn and memory.",
     healingMessage: "Your memories are a garden, not a cage. This chrysanthemum honors your capacity to feel deeply. Qi Baishi painted with the wisdom of decades — each brushstroke a conversation with time. Let nostalgia be tender, not heavy.",
     color: "45 60% 60%",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Qi_Baishi_chrysanthemum.jpg",
   },
   {
     id: "lotus",
@@ -98,6 +106,7 @@ export const artFlowers: ArtFlower[] = [
     description: "The lotus rises from muddy waters to bloom immaculate — Zhang Daqian captured this transcendence with splashed ink and vivid color.",
     healingMessage: "Numbness is not the absence of feeling — it is feeling's cocoon. This lotus rises from still, dark water, proving that depth is not emptiness. Something beautiful is forming beneath your surface. Give it time.",
     color: "330 45% 70%",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Zhang_Daqian_Erta_Lotus.jpg",
   },
   {
     id: "anemone",
@@ -111,6 +120,7 @@ export const artFlowers: ArtFlower[] = [
     color: "0 70% 50%",
   },
 ];
+
 
 export function findFlowerForMood(input: string): ArtFlower {
   const lower = input.toLowerCase();
