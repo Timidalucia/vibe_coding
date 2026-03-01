@@ -18,10 +18,9 @@ interface FlowerResultProps {
   flower: ArtFlower;
   userMood: string;
   onReset: () => void;
-  onHoverChange?: (hovered: boolean) => void;
 }
 
-const FlowerResult = ({ flower, onReset, onHoverChange }: FlowerResultProps) => {
+const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [processedSticker, setProcessedSticker] = useState<string | null>(null);
@@ -42,15 +41,33 @@ const FlowerResult = ({ flower, onReset, onHoverChange }: FlowerResultProps) => 
       transition={{ duration: 0.6 }}
       className="flex flex-col items-center w-full max-w-2xl mx-auto px-4 md:px-6"
     >
-      {/* Interactive sticker area */}
-      <motion.div
-        className="relative w-full max-w-xs md:max-w-sm cursor-pointer"
-        style={{ aspectRatio: "3 / 4" }}
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        onMouseEnter={() => { setIsHovered(true); onHoverChange?.(true); }}
-        onMouseLeave={() => { setIsHovered(false); onHoverChange?.(false); }}
+      {/* PreviewReveal — collapsible painting container */}
+      <div
+        className="relative w-full max-w-xs md:max-w-sm mx-auto overflow-hidden rounded-2xl transition-[height] duration-[400ms] ease-in-out motion-reduce:transition-none"
+        style={{
+          height: isHovered ? "clamp(320px, 45vw, 480px)" : "clamp(100px, 15vw, 160px)",
+        }}
+      >
+        {/* Painting image — non-interactive, doesn't block scroll */}
+        <img
+          src={sourceSrc}
+          alt={`${flower.artwork} by ${flower.artist}`}
+          className="absolute inset-0 w-full h-full object-cover rounded-2xl transition-opacity duration-[350ms] ease-in-out motion-reduce:transition-none"
+          style={{
+            opacity: isHovered ? 1 : 0,
+            pointerEvents: "none",
+          }}
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = "none";
+          }}
+        />
+      </div>
+
+      {/* Flower cutout — the only hover trigger */}
+      <div
+        className="relative z-10 -mt-16 md:-mt-20 cursor-pointer"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         onClick={() => setIsModalOpen(true)}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
@@ -62,79 +79,80 @@ const FlowerResult = ({ flower, onReset, onHoverChange }: FlowerResultProps) => 
         role="button"
         aria-label={`View ${flower.artwork} by ${flower.artist}`}
       >
-        {/* Original painting (revealed on hover) */}
-        <img
-          src={sourceSrc}
-          alt={`${flower.artwork} by ${flower.artist}`}
-          className="absolute inset-0 w-full h-full object-cover rounded-2xl transition-opacity duration-[400ms] ease-in-out"
-          style={{ opacity: isHovered ? 1 : 0 }}
+        <motion.img
+          src={processedSticker || rawStickerSrc}
+          alt={`${flower.name} — cut-out from ${flower.artwork}`}
+          className="w-20 h-28 md:w-28 md:h-40 object-contain transition-opacity duration-[350ms] ease-in-out motion-reduce:transition-none"
+          style={{ opacity: isHovered ? 0.15 : 1 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: isHovered ? 0.15 : 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
           onError={(e) => {
-            (e.target as HTMLImageElement).style.display = 'none';
+            const el = e.target as HTMLImageElement;
+            el.style.display = "none";
+            const placeholder = document.createElement("div");
+            placeholder.className = "w-20 h-28 bg-muted rounded-lg";
+            el.parentElement?.appendChild(placeholder);
           }}
         />
-
-        {/* Flower cut-out — exact uploaded PNG, no effects */}
-        <div className="absolute inset-0 flex items-center justify-center p-4">
-          <img
-            src={processedSticker || rawStickerSrc}
-            alt={`${flower.name} — cut-out from ${flower.artwork}`}
-            className="max-w-[90%] max-h-[90%] object-contain transition-opacity duration-[400ms] ease-in-out"
-            style={{
-              opacity: isHovered ? 0.12 : 1,
-            }}
-            onError={(e) => {
-              const el = e.target as HTMLImageElement;
-              el.style.display = 'none';
-              const placeholder = document.createElement('div');
-              placeholder.className = 'w-48 h-64 bg-muted rounded-lg';
-              el.parentElement?.appendChild(placeholder);
-            }}
-          />
-        </div>
-      </motion.div>
+      </div>
 
       {/* Attribution */}
       <motion.p
-        className="text-muted-foreground text-center text-sm md:text-base mt-3 mb-4 font-sans"
+        className="text-muted-foreground text-center text-sm mt-3 mb-2 font-sans"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.6, duration: 0.5 }}
+        transition={{ delay: 0.5, duration: 0.4 }}
       >
-        from <span className="font-serif italic">"{flower.artwork}"</span> by {flower.artist}, {flower.year}
+        from <span className="font-serif italic">"{flower.artwork}"</span> by{" "}
+        {flower.artist}, {flower.year}
       </motion.p>
 
-      <motion.div className="w-16 h-px bg-border mb-4" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.7, duration: 0.5 }} />
+      <motion.div
+        className="w-12 h-px bg-border mb-3"
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ delay: 0.6, duration: 0.4 }}
+      />
 
       {/* Description */}
       <motion.p
-        className="text-foreground/80 text-center text-base md:text-lg leading-relaxed mb-6 font-sans max-w-xl"
-        initial={{ opacity: 0, y: 15 }}
+        className="text-foreground/80 text-center text-sm md:text-base leading-relaxed mb-4 font-sans max-w-lg"
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8, duration: 0.6 }}
+        transition={{ delay: 0.7, duration: 0.5 }}
       >
         {flower.description}
       </motion.p>
 
       {/* Healing message */}
       <motion.div
-        className="w-full max-w-xl rounded-2xl p-6 md:p-8 mb-10"
+        className="w-full max-w-lg rounded-2xl p-4 md:p-6 mb-6"
         style={{ backgroundColor: `hsl(${flower.color} / 0.08)` }}
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.0, duration: 0.6 }}
+        transition={{ delay: 0.9, duration: 0.5 }}
       >
-        <p className="font-serif italic text-sm text-muted-foreground mb-3">Why this flower is for you</p>
-        <p className="text-foreground text-base md:text-lg leading-relaxed font-sans">{flower.healingMessage}</p>
+        <p className="font-serif italic text-xs text-muted-foreground mb-2">
+          Why this flower is for you
+        </p>
+        <p className="text-foreground text-sm md:text-base leading-relaxed font-sans">
+          {flower.healingMessage}
+        </p>
       </motion.div>
 
       {/* Reset */}
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4, duration: 0.5 }}>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2, duration: 0.4 }}
+      >
         <Button
           onClick={onReset}
           variant="outline"
-          className="rounded-full px-6 py-5 text-sm font-sans gap-2 border-border/60 hover:bg-card transition-all duration-300"
+          className="rounded-full px-5 py-4 text-sm font-sans gap-2 border-border/60 hover:bg-card transition-all duration-300"
         >
-          <RotateCcw className="w-4 h-4" />
+          <RotateCcw className="w-3.5 h-3.5" />
           Share another feeling
         </Button>
       </motion.div>
@@ -152,7 +170,8 @@ const FlowerResult = ({ flower, onReset, onHoverChange }: FlowerResultProps) => 
           <div className="p-6 md:p-8">
             <DialogHeader>
               <DialogTitle className="font-serif text-xl md:text-2xl">
-                {flower.artist} — <span className="italic">{flower.artwork}</span> ({flower.year})
+                {flower.artist} —{" "}
+                <span className="italic">{flower.artwork}</span> ({flower.year})
               </DialogTitle>
               <DialogDescription className="text-base leading-relaxed mt-4">
                 {flower.description}
