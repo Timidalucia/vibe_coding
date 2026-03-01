@@ -29,7 +29,7 @@ const Index = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
         >
-          The Art Flower Oracle
+          S(C)ENT FOR YOU
         </motion.p>
       </header>
 
