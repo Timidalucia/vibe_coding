@@ -75,29 +75,8 @@ export function extractCutout(
         // Draw cropped painting region into the (possibly clipped) canvas
         ctx.drawImage(img, cx, cy, cw, ch, 0, 0, outW, outH);
 
-        // Subtle anti-aliased edge softening (1-2px feather on the polygon edge)
-        if (region.polygon && region.polygon.length >= 3) {
-          const featherCanvas = document.createElement("canvas");
-          featherCanvas.width = outW;
-          featherCanvas.height = outH;
-          const fc = featherCanvas.getContext("2d")!;
-
-          // Draw the polygon slightly inset for soft edges
-          fc.beginPath();
-          const [sx, sy] = region.polygon[0];
-          fc.moveTo(sx * outW, sy * outH);
-          for (let i = 1; i < region.polygon.length; i++) {
-            const [px, py] = region.polygon[i];
-            fc.lineTo(px * outW, py * outH);
-          }
-          fc.closePath();
-          fc.filter = "blur(3px)";
-          fc.fillStyle = "#000";
-          fc.fill();
-
-          ctx.globalCompositeOperation = "destination-in";
-          ctx.drawImage(featherCanvas, 0, 0);
-        }
+        // Crisp die-cut edge: sharp clip, no feathering
+        // (the polygon mask already defines the clean silhouette)
 
         const dataUrl = canvas.toDataURL("image/png");
         cache.set(cacheKey, dataUrl);
