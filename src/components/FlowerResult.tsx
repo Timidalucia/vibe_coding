@@ -38,7 +38,6 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
     }
   }, [sourceSrc, region]);
 
-  // Debounced hover to prevent flicker
   const handleEnter = useCallback(() => {
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
     hoverTimer.current = setTimeout(() => setIsHovered(true), 100);
@@ -60,46 +59,42 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
       transition={{ duration: 0.6 }}
       className="flex flex-col items-center w-full max-w-[760px] mx-auto px-4"
     >
-      {/* FlowerStage — fixed height, stable hover hitbox */}
+      {/* FlowerStage — fixed explicit height, two layers always in DOM */}
       <div
-        className="relative w-full overflow-hidden rounded-2xl cursor-pointer"
-        style={{ height: "clamp(240px, 35vw, 320px)" }}
+        className="relative w-full overflow-hidden rounded-2xl cursor-pointer h-[260px] md:h-[340px]"
         onMouseEnter={handleEnter}
         onMouseLeave={handleLeave}
         onClick={() => setIsModalOpen(true)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            setIsModalOpen(true);
-          }
-        }}
         tabIndex={0}
         role="button"
         aria-label={`View ${flower.artwork} by ${flower.artist}`}
       >
-        {/* Layer 1 (back): Full painting — always in DOM, opacity only */}
+        {/* Layer 1: Full painting (back) — always in DOM, opacity only */}
         <img
           src={sourceSrc}
           alt={`${flower.artwork} by ${flower.artist}`}
-          className="absolute inset-0 w-full h-full object-cover rounded-2xl transition-opacity duration-[350ms] ease-in-out motion-reduce:transition-none"
+          className="absolute inset-0 w-full h-full object-cover rounded-2xl transition-opacity duration-[400ms] ease-in-out motion-reduce:transition-none"
           style={{ opacity: isHovered ? 1 : 0, pointerEvents: "none" }}
-          onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
         />
 
-        {/* Layer 2 (front): Flower cutout — large, centered, always in DOM */}
+        {/* Layer 2: Flower cutout (front) — always in DOM, opacity only */}
         <div
-          className="absolute inset-0 flex items-center justify-center transition-opacity duration-[350ms] ease-in-out motion-reduce:transition-none"
-          style={{ opacity: isHovered ? 0.12 : 1 }}
+          className="absolute inset-0 w-full h-full flex items-center justify-center transition-opacity duration-[400ms] ease-in-out motion-reduce:transition-none"
+          style={{ opacity: isHovered ? 0 : 1 }}
         >
           {cutoutSrc ? (
             <img
               src={cutoutSrc}
               alt={`${flower.name} — from ${flower.artwork}`}
-              className="object-contain"
-              style={{ height: "clamp(120px, 22vw, 170px)" }}
+              className="max-h-[75%] max-w-[85%] object-contain"
             />
           ) : (
-            <div className="w-32 h-40 bg-muted/20 rounded-lg animate-pulse" />
+            /* Fallback: show painting as rectangular crop while cutout loads */
+            <img
+              src={sourceSrc}
+              alt={`${flower.name} loading`}
+              className="w-full h-full object-cover opacity-60"
+            />
           )}
         </div>
       </div>
@@ -164,23 +159,32 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         </Button>
       </motion.div>
 
-      {/* Detail modal */}
+      {/* Detail modal — viewport-constrained, no scroll */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0 gap-0">
-          <div className="w-full">
+        <DialogContent
+          className="p-0 gap-0 overflow-hidden"
+          style={{
+            width: "min(92vw, 900px)",
+            maxWidth: "900px",
+            maxHeight: "86vh",
+            display: "grid",
+            gridTemplateRows: "auto 1fr",
+          }}
+        >
+          <div className="w-full overflow-hidden">
             <img
               src={sourceSrc}
               alt={`${flower.artwork} by ${flower.artist} — full painting`}
-              className="w-full h-auto block rounded-t-lg"
+              className="w-full object-contain max-h-[42vh] md:max-h-[52vh] block"
             />
           </div>
-          <div className="p-6 md:p-8">
+          <div className="p-5 md:p-6 overflow-hidden">
             <DialogHeader>
-              <DialogTitle className="font-serif text-xl md:text-2xl">
+              <DialogTitle className="font-serif text-lg md:text-xl">
                 {flower.artist} —{" "}
                 <span className="italic">{flower.artwork}</span> ({flower.year})
               </DialogTitle>
-              <DialogDescription className="text-base leading-relaxed mt-4">
+              <DialogDescription className="text-sm leading-relaxed mt-2 line-clamp-4">
                 {flower.description}
               </DialogDescription>
             </DialogHeader>
@@ -189,7 +193,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
                 href={flower.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block text-xs text-muted-foreground/60 hover:text-muted-foreground mt-4 underline underline-offset-2"
+                className="inline-block text-xs text-muted-foreground/60 hover:text-muted-foreground mt-3 underline underline-offset-2"
               >
                 Source: Wikimedia Commons
               </a>
