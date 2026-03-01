@@ -1,17 +1,24 @@
 /**
- * Runtime flower crop from source paintings.
- * Crops a rectangular region — NO circular mask.
- * Subtle edge feathering only (thin border fade).
+ * Runtime flower cutout from source paintings.
+ * Crops a region then applies a POLYGON mask to carve out the flower shape.
+ * Result: pixel-exact cutout with real alpha transparency.
  */
 
 const cache = new Map<string, string>();
 
 export interface CutoutRegion {
+  /** Crop rectangle as fractions of image dimensions (0–1) */
   x: number;
   y: number;
   w: number;
   h: number;
-  mask?: string;
+  /**
+   * Polygon mask points as fractions (0–1) of the CROP region.
+   * Each point is [fractionalX, fractionalY].
+   * If omitted, the full rectangle is used (no mask).
+   */
+  polygon?: [number, number][];
+  /** Optional rotation in degrees */
   rotation?: number;
 }
 
@@ -46,45 +53,54 @@ export function extractCutout(
         canvas.height = outH;
         const ctx = canvas.getContext("2d")!;
 
-        // Draw the cropped region — full rectangle, no clipping
+        if (region.rotation) {
+          ctx.translate(outW / 2, outH / 2);
+          ctx.rotate((region.rotation * Math.PI) / 180);
+          ctx.translate(-outW / 2, -outH / 2);
+        }
+
+        // Apply polygon mask if defined
+        if (region.polygon && region.polygon.length >= 3) {
+          ctx.beginPath();
+          const [startX, startY] = region.polygon[0];
+          ctx.moveTo(startX * outW, startY * outH);
+          for (let i = 1; i < region.polygon.length; i++) {
+            const [px, py] = region.polygon[i];
+            ctx.lineTo(px * outW, py * outH);
+          }
+          ctx.closePath();
+          ctx.clip();
+        }
+
+        // Draw cropped painting region into the (possibly clipped) canvas
         ctx.drawImage(img, cx, cy, cw, ch, 0, 0, outW, outH);
 
-        // Very subtle edge fade (only outermost 5% of each edge)
-        const feather = Math.min(outW, outH) * 0.05;
-        if (feather > 2) {
-          const edgeCanvas = document.createElement("canvas");
-          edgeCanvas.width = outW;
-          edgeCanvas.height = outH;
-          const ec = edgeCanvas.getContext("2d")!;
+        // Subtle anti-aliased edge softening (1-2px feather on the polygon edge)
+        if (region.polygon && region.polygon.length >= 3) {
+          const featherCanvas = document.createElement("canvas");
+          featherCanvas.width = outW;
+          featherCanvas.height = outH;
+          const fc = featherCanvas.getContext("2d")!;
 
-          // Start fully opaque
-          ec.fillStyle = "#000";
-          ec.fillRect(0, 0, outW, outH);
-
-          // Fade each edge
-          ec.globalCompositeOperation = "destination-out";
-          const edges = [
-            { x0: 0, y0: 0, x1: feather, y1: 0, r: [0, 0, feather, outH] },
-            { x0: outW, y0: 0, x1: outW - feather, y1: 0, r: [outW - feather, 0, feather, outH] },
-            { x0: 0, y0: 0, x1: 0, y1: feather, r: [0, 0, outW, feather] },
-            { x0: 0, y0: outH, x1: 0, y1: outH - feather, r: [0, outH - feather, outW, feather] },
-          ] as const;
-
-          for (const e of edges) {
-            const g = ec.createLinearGradient(e.x0, e.y0, e.x1, e.y1);
-            g.addColorStop(0, "rgba(0,0,0,1)");
-            g.addColorStop(1, "rgba(0,0,0,0)");
-            ec.fillStyle = g;
-            ec.fillRect(e.r[0], e.r[1], e.r[2], e.r[3]);
+          // Draw the polygon slightly inset for soft edges
+          fc.beginPath();
+          const [sx, sy] = region.polygon[0];
+          fc.moveTo(sx * outW, sy * outH);
+          for (let i = 1; i < region.polygon.length; i++) {
+            const [px, py] = region.polygon[i];
+            fc.lineTo(px * outW, py * outH);
           }
+          fc.closePath();
+          fc.filter = "blur(2px)";
+          fc.fillStyle = "#000";
+          fc.fill();
 
           ctx.globalCompositeOperation = "destination-in";
-          ctx.drawImage(edgeCanvas, 0, 0);
+          ctx.drawImage(featherCanvas, 0, 0);
         }
 
         const dataUrl = canvas.toDataURL("image/png");
         cache.set(cacheKey, dataUrl);
-        console.log("[extractCutout] Success:", outW, "x", outH);
         resolve(dataUrl);
       } catch (err) {
         console.warn("[extractCutout] Failed:", err);
