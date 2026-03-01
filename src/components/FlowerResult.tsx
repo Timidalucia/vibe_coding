@@ -72,7 +72,6 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
             className="max-w-[80%] max-h-[80%] object-contain transition-opacity duration-[400ms] ease-in-out"
             style={{
               opacity: isHovered ? 0.12 : 1,
-              mixBlendMode: 'multiply',
             }}
             onError={(e) => {
               const el = e.target as HTMLImageElement;
