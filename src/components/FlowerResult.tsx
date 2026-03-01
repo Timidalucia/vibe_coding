@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArtFlower } from "@/data/artFlowers";
-import { artworkSourceImages, artworkStickerImages } from "@/data/artworkImages";
-import { removeBackground } from "@/lib/removeBackground";
+import { artworkSourceImages } from "@/data/artworkImages";
+import { extractCutout } from "@/lib/extractCutout";
+import { flowerCutoutRegions } from "@/data/flowerCutoutRegions";
 
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
@@ -23,16 +24,18 @@ interface FlowerResultProps {
 const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [processedSticker, setProcessedSticker] = useState<string | null>(null);
+  const [cutoutSrc, setCutoutSrc] = useState<string>("");
 
-  const rawStickerSrc = artworkStickerImages[flower.id];
   const sourceSrc = artworkSourceImages[flower.id];
+  const region = flowerCutoutRegions[flower.id];
 
   useEffect(() => {
-    if (rawStickerSrc) {
-      removeBackground(rawStickerSrc).then(setProcessedSticker);
+    if (sourceSrc && region) {
+      extractCutout(sourceSrc, region, 480).then((url) => {
+        if (url) setCutoutSrc(url);
+      });
     }
-  }, [rawStickerSrc]);
+  }, [sourceSrc, region]);
 
   return (
     <motion.div
@@ -45,25 +48,23 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
       <div
         className="relative w-full max-w-xs md:max-w-sm mx-auto overflow-hidden rounded-2xl transition-[height] duration-[400ms] ease-in-out motion-reduce:transition-none"
         style={{
-          height: isHovered ? "clamp(320px, 45vw, 480px)" : "clamp(100px, 15vw, 160px)",
+          height: isHovered
+            ? "clamp(320px, 45vw, 480px)"
+            : "clamp(100px, 15vw, 160px)",
         }}
       >
-        {/* Painting image — non-interactive, doesn't block scroll */}
         <img
           src={sourceSrc}
           alt={`${flower.artwork} by ${flower.artist}`}
           className="absolute inset-0 w-full h-full object-cover rounded-2xl transition-opacity duration-[350ms] ease-in-out motion-reduce:transition-none"
-          style={{
-            opacity: isHovered ? 1 : 0,
-            pointerEvents: "none",
-          }}
+          style={{ opacity: isHovered ? 1 : 0, pointerEvents: "none" }}
           onError={(e) => {
             (e.target as HTMLImageElement).style.display = "none";
           }}
         />
       </div>
 
-      {/* Flower cutout — the only hover trigger */}
+      {/* Flower cutout — derived from the same painting at runtime */}
       <div
         className="relative z-10 -mt-16 md:-mt-20 cursor-pointer"
         onMouseEnter={() => setIsHovered(true)}
@@ -79,22 +80,19 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         role="button"
         aria-label={`View ${flower.artwork} by ${flower.artist}`}
       >
-        <motion.img
-          src={processedSticker || rawStickerSrc}
-          alt={`${flower.name} — cut-out from ${flower.artwork}`}
-          className="w-20 h-28 md:w-28 md:h-40 object-contain transition-opacity duration-[350ms] ease-in-out motion-reduce:transition-none"
-          style={{ opacity: isHovered ? 0.15 : 1 }}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: isHovered ? 0.15 : 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-          onError={(e) => {
-            const el = e.target as HTMLImageElement;
-            el.style.display = "none";
-            const placeholder = document.createElement("div");
-            placeholder.className = "w-20 h-28 bg-muted rounded-lg";
-            el.parentElement?.appendChild(placeholder);
-          }}
-        />
+        {cutoutSrc ? (
+          <motion.img
+            src={cutoutSrc}
+            alt={`${flower.name} — extracted from ${flower.artwork}`}
+            className="w-24 h-28 md:w-32 md:h-40 object-contain transition-opacity duration-[350ms] ease-in-out motion-reduce:transition-none"
+            style={{ opacity: isHovered ? 0.15 : 1 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: isHovered ? 0.15 : 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+          />
+        ) : (
+          <div className="w-24 h-28 md:w-32 md:h-40 bg-muted/30 rounded-full" />
+        )}
       </div>
 
       {/* Attribution */}
