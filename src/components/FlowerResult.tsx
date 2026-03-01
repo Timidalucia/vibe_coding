@@ -31,7 +31,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
 
   const sourceSrc = artworkSourceImages[flower.id];
   const region = flowerCutoutRegions[flower.id];
-  const premadeCutout = artworkStickerImages[flower.id] || artworkCutoutImages[flower.id];
+  const premadeCutout = artworkCutoutImages[flower.id] || artworkStickerImages[flower.id];
 
   useEffect(() => {
     setCutoutSrc("");
