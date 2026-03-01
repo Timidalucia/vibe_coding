@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ArtFlower } from "@/data/artFlowers";
-import { artworkSourceImages, artworkCutoutImages } from "@/data/artworkImages";
+import { artworkSourceImages, artworkCutoutImages, artworkStickerImages } from "@/data/artworkImages";
 import { extractCutout } from "@/lib/extractCutout";
 import { flowerCutoutRegions } from "@/data/flowerCutoutRegions";
 
@@ -31,7 +31,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
 
   const sourceSrc = artworkSourceImages[flower.id];
   const region = flowerCutoutRegions[flower.id];
-  const premadeCutout = artworkCutoutImages[flower.id];
+  const premadeCutout = artworkStickerImages[flower.id] || artworkCutoutImages[flower.id];
 
   useEffect(() => {
     setCutoutSrc("");
