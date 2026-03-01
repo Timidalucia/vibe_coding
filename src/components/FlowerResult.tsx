@@ -26,6 +26,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [cutoutSrc, setCutoutSrc] = useState<string>("");
   const [cutoutReady, setCutoutReady] = useState(false);
+  const [modalWidth, setModalWidth] = useState<number | null>(null);
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const sourceSrc = artworkSourceImages[flower.id];
@@ -166,32 +167,38 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         </Button>
       </motion.div>
 
-      {/* Detail modal — viewport-constrained */}
+      {/* Detail modal — aspect-ratio-aware width */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent
           className="p-0 gap-0 overflow-hidden"
           style={{
-            width: "min(92vw, 900px)",
-            maxWidth: "900px",
-            maxHeight: "86vh",
-            display: "grid",
-            gridTemplateRows: "auto 1fr",
+            width: modalWidth ? `min(90vw, ${modalWidth}px)` : "min(90vw, 500px)",
+            maxWidth: modalWidth ? `${modalWidth}px` : "500px",
+            maxHeight: "88vh",
           }}
         >
           <div className="w-full overflow-hidden">
             <img
               src={sourceSrc}
               alt={`${flower.artwork} by ${flower.artist} — full painting`}
-              className="w-full object-contain max-h-[42vh] md:max-h-[52vh] block"
+              className="w-full h-auto block"
+              style={{ maxHeight: "min(70vh, 720px)", objectFit: "contain" }}
+              onLoad={(e) => {
+                const img = e.currentTarget;
+                const aspect = img.naturalWidth / img.naturalHeight;
+                const maxH = Math.min(window.innerHeight * 0.7, 720);
+                const renderedW = maxH * aspect;
+                setModalWidth(Math.round(renderedW + 48));
+              }}
             />
           </div>
-          <div className="p-5 md:p-6 overflow-hidden">
+          <div className="px-5 py-4 md:px-6 md:py-5 overflow-hidden">
             <DialogHeader>
-              <DialogTitle className="font-serif text-lg md:text-xl">
+              <DialogTitle className="font-serif text-base md:text-lg leading-snug">
                 {flower.artist} —{" "}
                 <span className="italic">{flower.artwork}</span> ({flower.year})
               </DialogTitle>
-              <DialogDescription className="text-sm leading-relaxed mt-2 line-clamp-4">
+              <DialogDescription className="text-sm leading-relaxed mt-2 line-clamp-3">
                 {flower.description}
               </DialogDescription>
             </DialogHeader>
@@ -200,7 +207,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
                 href={flower.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block text-xs text-muted-foreground/60 hover:text-muted-foreground mt-3 underline underline-offset-2"
+                className="inline-block text-xs text-muted-foreground/60 hover:text-muted-foreground mt-2 underline underline-offset-2"
               >
                 Source: Wikimedia Commons
               </a>
