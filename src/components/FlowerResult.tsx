@@ -4,6 +4,7 @@ import { ArtFlower } from "@/data/artFlowers";
 import { artworkSourceImages, artworkCutoutImages, artworkStickerImages } from "@/data/artworkImages";
 import { extractCutout } from "@/lib/extractCutout";
 import { flowerCutoutRegions } from "@/data/flowerCutoutRegions";
+import { removeStickerBackground } from "@/lib/removeStickerBackground";
 
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
@@ -37,14 +38,26 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
     setCutoutSrc("");
     setCutoutReady(false);
 
-    // Prefer pre-made cutout if available
+    // 1. Prefer pre-made transparent cutout
     if (premadeCutout) {
       setCutoutSrc(premadeCutout);
       setCutoutReady(true);
       return;
     }
 
-    // Fall back to runtime segmentation
+    // 2. Process sticker image (remove paper background)
+    const stickerSrc = artworkStickerImages[flower.id];
+    if (stickerSrc) {
+      removeStickerBackground(stickerSrc).then((url) => {
+        if (url) {
+          setCutoutSrc(url);
+          setCutoutReady(true);
+        }
+      });
+      return;
+    }
+
+    // 3. Fall back to runtime segmentation
     if (sourceSrc && region) {
       extractCutout(sourceSrc, region, 600).then((url) => {
         if (url) {
@@ -53,7 +66,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         }
       });
     }
-  }, [sourceSrc, region, premadeCutout]);
+  }, [sourceSrc, region, premadeCutout, flower.id]);
 
   const handleEnter = useCallback(() => {
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
