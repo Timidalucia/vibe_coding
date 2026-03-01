@@ -18,9 +18,10 @@ interface FlowerResultProps {
   flower: ArtFlower;
   userMood: string;
   onReset: () => void;
+  onHoverChange?: (hovered: boolean) => void;
 }
 
-const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
+const FlowerResult = ({ flower, onReset, onHoverChange }: FlowerResultProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [processedSticker, setProcessedSticker] = useState<string | null>(null);
@@ -48,8 +49,8 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onMouseEnter={() => { setIsHovered(true); onHoverChange?.(true); }}
+        onMouseLeave={() => { setIsHovered(false); onHoverChange?.(false); }}
         onClick={() => setIsModalOpen(true)}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
@@ -94,7 +95,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
 
       {/* Attribution */}
       <motion.p
-        className="text-muted-foreground text-center text-sm md:text-base mt-6 mb-8 font-sans"
+        className="text-muted-foreground text-center text-sm md:text-base mt-3 mb-4 font-sans"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6, duration: 0.5 }}
@@ -102,7 +103,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         from <span className="font-serif italic">"{flower.artwork}"</span> by {flower.artist}, {flower.year}
       </motion.p>
 
-      <motion.div className="w-16 h-px bg-border mb-8" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.7, duration: 0.5 }} />
+      <motion.div className="w-16 h-px bg-border mb-4" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.7, duration: 0.5 }} />
 
       {/* Description */}
       <motion.p
