@@ -40,8 +40,10 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
 
     // 1. Prefer pre-made transparent cutout
     if (premadeCutout) {
-      setCutoutSrc(premadeCutout);
-      setCutoutReady(true);
+      removeStickerBackground(premadeCutout).then((url) => {
+        setCutoutSrc(url || premadeCutout);
+        setCutoutReady(true);
+      });
       return;
     }
 
@@ -91,7 +93,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
     >
       {/* FlowerStage — fixed height, two layers always in DOM */}
       <div
-        className="relative w-full overflow-visible cursor-pointer h-[260px] md:h-[340px]"
+        className="relative w-full overflow-visible cursor-pointer h-[260px] md:h-[340px] bg-background"
         onMouseEnter={handleEnter}
         onMouseLeave={handleLeave}
         onClick={() => setIsModalOpen(true)}
