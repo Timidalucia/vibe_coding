@@ -91,7 +91,7 @@ export function extractCutout(
             fc.lineTo(px * outW, py * outH);
           }
           fc.closePath();
-          fc.filter = "blur(2px)";
+          fc.filter = "blur(3px)";
           fc.fillStyle = "#000";
           fc.fill();
 
