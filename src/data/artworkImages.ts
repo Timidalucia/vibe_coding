@@ -17,6 +17,8 @@ import almondBlossomSourceImg from "@/assets/artworks/almond-blossom-source.jpg"
 import rosesSourceImg from "@/assets/artworks/roses-source.jpg";
 import boncompainAnemonesSourceImg from "@/assets/artworks/boncompain-anemones-source.jpg";
 
+// Pre-made transparent cutouts (AI-isolated from source paintings)
+import rosesCutoutImg from "@/assets/artworks/roses-cutout.png";
 // Sticker cut-outs (on paper texture)
 import sunflowersStickerImg from "@/assets/artworks/sunflowers-sticker.png";
 import waterLiliesStickerImg from "@/assets/artworks/water-lilies-sticker.png";
@@ -62,4 +64,9 @@ export const artworkStickerImages: Record<string, string> = {
   chrysanthemum: chrysanthemumsStickerImg,
   lotus: lotusStickerImg,
   anemone: boncompainAnemonesStickerImg,
+};
+
+/** Pre-made transparent cutouts — used instead of runtime segmentation when available */
+export const artworkCutoutImages: Record<string, string> = {
+  rose: rosesCutoutImg,
 };

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ArtFlower } from "@/data/artFlowers";
-import { artworkSourceImages } from "@/data/artworkImages";
+import { artworkSourceImages, artworkCutoutImages } from "@/data/artworkImages";
 import { extractCutout } from "@/lib/extractCutout";
 import { flowerCutoutRegions } from "@/data/flowerCutoutRegions";
 
@@ -31,10 +31,20 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
 
   const sourceSrc = artworkSourceImages[flower.id];
   const region = flowerCutoutRegions[flower.id];
+  const premadeCutout = artworkCutoutImages[flower.id];
 
   useEffect(() => {
     setCutoutSrc("");
     setCutoutReady(false);
+
+    // Prefer pre-made cutout if available
+    if (premadeCutout) {
+      setCutoutSrc(premadeCutout);
+      setCutoutReady(true);
+      return;
+    }
+
+    // Fall back to runtime segmentation
     if (sourceSrc && region) {
       extractCutout(sourceSrc, region, 600).then((url) => {
         if (url) {
@@ -43,7 +53,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         }
       });
     }
-  }, [sourceSrc, region]);
+  }, [sourceSrc, region, premadeCutout]);
 
   const handleEnter = useCallback(() => {
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
