@@ -5,7 +5,7 @@ import orientalPoppiesImg from "@/assets/artworks/oriental-poppies.jpg";
 import almondBlossomImg from "@/assets/artworks/almond-blossom.jpg";
 import rosesImg from "@/assets/artworks/roses.jpg";
 import chrysanthemumsImg from "@/assets/artworks/chrysanthemums.jpg";
-import lotusPondImg from "@/assets/artworks/lotus-pond.jpg";
+import peoniesImg from "@/assets/artworks/peonies.jpg";
 import boncompainAnemonesImg from "@/assets/artworks/boncompain-anemones.jpg";
 
 // Source paintings (full original artwork for hover reveal)
@@ -15,6 +15,7 @@ import irisesSourceImg from "@/assets/artworks/irises-source.jpg";
 import orientalPoppiesSourceImg from "@/assets/artworks/oriental-poppies-source.jpg";
 import almondBlossomSourceImg from "@/assets/artworks/almond-blossom-source.jpg";
 import rosesSourceImg from "@/assets/artworks/roses-source.jpg";
+import peoniesSourceImg from "@/assets/artworks/peonies-source.jpg";
 import boncompainAnemonesSourceImg from "@/assets/artworks/boncompain-anemones-source.jpg";
 
 // Pre-made transparent cutouts (AI-isolated from source paintings)
@@ -27,7 +28,6 @@ import orientalPoppiesStickerImg from "@/assets/artworks/oriental-poppies-sticke
 import almondBlossomStickerImg from "@/assets/artworks/almond-blossom-sticker.png";
 import rosesStickerImg from "@/assets/artworks/roses-sticker.png";
 import chrysanthemumsStickerImg from "@/assets/artworks/chrysanthemums-sticker.png";
-import lotusStickerImg from "@/assets/artworks/lotus-sticker.png";
 import boncompainAnemonesStickerImg from "@/assets/artworks/boncompain-anemones-sticker.png";
 
 export const artworkImages: Record<string, string> = {
@@ -38,7 +38,7 @@ export const artworkImages: Record<string, string> = {
   "almond-blossom": almondBlossomImg,
   rose: rosesImg,
   chrysanthemum: chrysanthemumsImg,
-  lotus: lotusPondImg,
+  peony: peoniesImg,
   anemone: boncompainAnemonesImg,
 };
 
@@ -50,7 +50,7 @@ export const artworkSourceImages: Record<string, string> = {
   "almond-blossom": almondBlossomSourceImg,
   rose: rosesSourceImg,
   chrysanthemum: chrysanthemumsImg,
-  lotus: lotusPondImg,
+  peony: peoniesSourceImg,
   anemone: boncompainAnemonesSourceImg,
 };
 
@@ -62,7 +62,6 @@ export const artworkStickerImages: Record<string, string> = {
   "almond-blossom": almondBlossomStickerImg,
   rose: rosesStickerImg,
   chrysanthemum: chrysanthemumsStickerImg,
-  lotus: lotusStickerImg,
   anemone: boncompainAnemonesStickerImg,
 };
 
