@@ -35,7 +35,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
     >
       {/* Interactive sticker area */}
       <motion.div
-        className="relative w-full max-w-lg rounded-2xl overflow-hidden cursor-pointer bg-background"
+        className="relative w-full max-w-lg cursor-pointer"
         style={{ aspectRatio: "1 / 1" }}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -57,18 +57,29 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         <img
           src={sourceSrc}
           alt={`${flower.artwork} by ${flower.artist}`}
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out"
+          className="absolute inset-0 w-full h-full object-cover rounded-2xl transition-opacity duration-[400ms] ease-in-out"
           style={{ opacity: isHovered ? 1 : 0 }}
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = 'none';
+          }}
         />
 
-        {/* Flower cut-out */}
+        {/* Flower cut-out — exact uploaded PNG, no effects */}
         <div className="absolute inset-0 flex items-center justify-center p-8">
           <img
             src={stickerSrc}
             alt={`${flower.name} — cut-out from ${flower.artwork}`}
-            className="max-w-[80%] max-h-[80%] object-contain transition-opacity duration-500 ease-in-out"
+            className="max-w-[80%] max-h-[80%] object-contain transition-opacity duration-[400ms] ease-in-out"
             style={{
               opacity: isHovered ? 0.12 : 1,
+              mixBlendMode: 'multiply',
+            }}
+            onError={(e) => {
+              const el = e.target as HTMLImageElement;
+              el.style.display = 'none';
+              const placeholder = document.createElement('div');
+              placeholder.className = 'w-48 h-64 bg-muted rounded-lg';
+              el.parentElement?.appendChild(placeholder);
             }}
           />
         </div>
