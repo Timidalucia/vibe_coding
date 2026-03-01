@@ -25,27 +25,33 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [cutoutSrc, setCutoutSrc] = useState<string>("");
+  const [cutoutReady, setCutoutReady] = useState(false);
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const sourceSrc = artworkSourceImages[flower.id];
   const region = flowerCutoutRegions[flower.id];
 
   useEffect(() => {
+    setCutoutSrc("");
+    setCutoutReady(false);
     if (sourceSrc && region) {
       extractCutout(sourceSrc, region, 600).then((url) => {
-        if (url) setCutoutSrc(url);
+        if (url) {
+          setCutoutSrc(url);
+          setCutoutReady(true);
+        }
       });
     }
   }, [sourceSrc, region]);
 
   const handleEnter = useCallback(() => {
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
-    hoverTimer.current = setTimeout(() => setIsHovered(true), 100);
+    hoverTimer.current = setTimeout(() => setIsHovered(true), 80);
   }, []);
 
   const handleLeave = useCallback(() => {
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
-    hoverTimer.current = setTimeout(() => setIsHovered(false), 100);
+    hoverTimer.current = setTimeout(() => setIsHovered(false), 80);
   }, []);
 
   useEffect(() => {
@@ -59,7 +65,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
       transition={{ duration: 0.6 }}
       className="flex flex-col items-center w-full max-w-[760px] mx-auto px-4"
     >
-      {/* FlowerStage — fixed explicit height, two layers always in DOM */}
+      {/* FlowerStage — fixed height, two layers always in DOM */}
       <div
         className="relative w-full overflow-hidden rounded-2xl cursor-pointer h-[260px] md:h-[340px]"
         onMouseEnter={handleEnter}
@@ -69,7 +75,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         role="button"
         aria-label={`View ${flower.artwork} by ${flower.artist}`}
       >
-        {/* Layer 1: Full painting (back) — always in DOM, opacity only */}
+        {/* Layer 1 (back): Full painting — always in DOM, pointer-events:none */}
         <img
           src={sourceSrc}
           alt={`${flower.artwork} by ${flower.artist}`}
@@ -77,23 +83,24 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
           style={{ opacity: isHovered ? 1 : 0, pointerEvents: "none" }}
         />
 
-        {/* Layer 2: Flower cutout (front) — always in DOM, opacity only */}
+        {/* Layer 2 (front): Flower cutout — always in DOM */}
         <div
           className="absolute inset-0 w-full h-full flex items-center justify-center transition-opacity duration-[400ms] ease-in-out motion-reduce:transition-none"
-          style={{ opacity: isHovered ? 0 : 1 }}
+          style={{ opacity: isHovered ? 0.1 : 1 }}
         >
-          {cutoutSrc ? (
+          {cutoutReady ? (
             <img
               src={cutoutSrc}
               alt={`${flower.name} — from ${flower.artwork}`}
-              className="max-h-[75%] max-w-[85%] object-contain"
+              className="object-contain drop-shadow-lg"
+              style={{ maxHeight: "85%", maxWidth: "90%" }}
             />
           ) : (
-            /* Fallback: show painting as rectangular crop while cutout loads */
+            /* Loading: show blurred painting crop as placeholder */
             <img
               src={sourceSrc}
               alt={`${flower.name} loading`}
-              className="w-full h-full object-cover opacity-60"
+              className="w-full h-full object-cover blur-sm opacity-50"
             />
           )}
         </div>
@@ -159,7 +166,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         </Button>
       </motion.div>
 
-      {/* Detail modal — viewport-constrained, no scroll */}
+      {/* Detail modal — viewport-constrained */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent
           className="p-0 gap-0 overflow-hidden"
