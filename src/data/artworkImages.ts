@@ -6,6 +6,7 @@ import almondBlossomImg from "@/assets/artworks/almond-blossom.jpg";
 import rosesImg from "@/assets/artworks/roses.jpg";
 import chrysanthemumsImg from "@/assets/artworks/chrysanthemums.jpg";
 import lotusPondImg from "@/assets/artworks/lotus-pond.jpg";
+import boncompainAnemonesImg from "@/assets/artworks/boncompain-anemones.jpg";
 
 // Source paintings (full original artwork for hover reveal)
 import sunflowersSourceImg from "@/assets/artworks/sunflowers-source.jpg";
@@ -14,8 +15,9 @@ import irisesSourceImg from "@/assets/artworks/irises-source.jpg";
 import orientalPoppiesSourceImg from "@/assets/artworks/oriental-poppies-source.jpg";
 import almondBlossomSourceImg from "@/assets/artworks/almond-blossom-source.jpg";
 import rosesSourceImg from "@/assets/artworks/roses-source.jpg";
+import boncompainAnemonesSourceImg from "@/assets/artworks/boncompain-anemones-source.jpg";
 
-// Sticker cut-outs (transparent PNG)
+// Sticker cut-outs (on paper texture)
 import sunflowersStickerImg from "@/assets/artworks/sunflowers-sticker.png";
 import waterLiliesStickerImg from "@/assets/artworks/water-lilies-sticker.png";
 import irisesStickerImg from "@/assets/artworks/irises-sticker.png";
@@ -24,6 +26,7 @@ import almondBlossomStickerImg from "@/assets/artworks/almond-blossom-sticker.pn
 import rosesStickerImg from "@/assets/artworks/roses-sticker.png";
 import chrysanthemumsStickerImg from "@/assets/artworks/chrysanthemums-sticker.png";
 import lotusStickerImg from "@/assets/artworks/lotus-sticker.png";
+import boncompainAnemonesStickerImg from "@/assets/artworks/boncompain-anemones-sticker.png";
 
 export const artworkImages: Record<string, string> = {
   sunflower: sunflowersImg,
@@ -34,6 +37,7 @@ export const artworkImages: Record<string, string> = {
   rose: rosesImg,
   chrysanthemum: chrysanthemumsImg,
   lotus: lotusPondImg,
+  anemone: boncompainAnemonesImg,
 };
 
 export const artworkSourceImages: Record<string, string> = {
@@ -43,8 +47,9 @@ export const artworkSourceImages: Record<string, string> = {
   "red-poppy": orientalPoppiesSourceImg,
   "almond-blossom": almondBlossomSourceImg,
   rose: rosesSourceImg,
-  chrysanthemum: chrysanthemumsImg, // using artwork as source
-  lotus: lotusPondImg, // using artwork as source
+  chrysanthemum: chrysanthemumsImg,
+  lotus: lotusPondImg,
+  anemone: boncompainAnemonesSourceImg,
 };
 
 export const artworkStickerImages: Record<string, string> = {
@@ -56,4 +61,5 @@ export const artworkStickerImages: Record<string, string> = {
   rose: rosesStickerImg,
   chrysanthemum: chrysanthemumsStickerImg,
   lotus: lotusStickerImg,
+  anemone: boncompainAnemonesStickerImg,
 };

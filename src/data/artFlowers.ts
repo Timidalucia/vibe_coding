@@ -99,6 +99,17 @@ export const artFlowers: ArtFlower[] = [
     healingMessage: "Numbness is not the absence of feeling — it is feeling's cocoon. This lotus rises from still, dark water, proving that depth is not emptiness. Something beautiful is forming beneath your surface. Give it time.",
     color: "330 45% 70%",
   },
+  {
+    id: "anemone",
+    name: "Anemone",
+    artwork: "Bouquet d'Anémones",
+    artist: "Pierre Boncompain",
+    year: "1990",
+    moods: ["brave", "bold", "passionate", "alive", "intense", "determined", "fierce"],
+    description: "Boncompain's anemones burst with Mediterranean warmth — bold reds, blues, and purples arranged with the joyful spontaneity of a Provençal afternoon. His Fauvist-inspired palette celebrates color as pure emotion.",
+    healingMessage: "This vivid anemone is for the fire in you. Boncompain paints with unapologetic joy, layering bold color upon bold color because life is too short for muted tones. Whatever you're feeling fiercely right now — that intensity is your gift. Let it bloom.",
+    color: "0 70% 50%",
+  },
 ];
 
 export function findFlowerForMood(input: string): ArtFlower {
