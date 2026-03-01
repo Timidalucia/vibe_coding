@@ -76,9 +76,9 @@ function buildForegroundMask(
 ): Uint8Array {
   const mask = new Uint8Array(w * h);
 
-  // Adaptive thresholds based on background color variance
-  const LOW = 30;   // below → definitely background
-  const HIGH = 65;  // above → definitely foreground
+  // Tighter thresholds for cleaner edges (like a hand-cut sticker)
+  const LOW = 22;   // below → definitely background
+  const HIGH = 50;  // above → definitely foreground
 
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {

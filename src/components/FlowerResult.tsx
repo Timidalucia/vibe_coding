@@ -93,8 +93,12 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
             <img
               src={cutoutSrc}
               alt={`${flower.name} — from ${flower.artwork}`}
-              className="object-contain drop-shadow-lg"
-              style={{ maxHeight: "85%", maxWidth: "90%" }}
+              className="object-contain"
+              style={{
+                maxHeight: "85%",
+                maxWidth: "90%",
+                filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.18)) drop-shadow(0 2px 6px rgba(0,0,0,0.12))",
+              }}
             />
           ) : (
             /* Loading: show blurred painting crop as placeholder */
