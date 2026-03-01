@@ -91,7 +91,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
     >
       {/* FlowerStage — fixed height, two layers always in DOM */}
       <div
-        className="relative w-full overflow-hidden rounded-2xl cursor-pointer h-[260px] md:h-[340px]"
+        className="relative w-full overflow-hidden rounded-2xl cursor-pointer h-[260px] md:h-[340px] bg-background"
         onMouseEnter={handleEnter}
         onMouseLeave={handleLeave}
         onClick={() => setIsModalOpen(true)}
@@ -120,7 +120,6 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
               style={{
                 maxHeight: "85%",
                 maxWidth: "90%",
-                filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.18)) drop-shadow(0 2px 6px rgba(0,0,0,0.12))",
               }}
             />
           ) : (
