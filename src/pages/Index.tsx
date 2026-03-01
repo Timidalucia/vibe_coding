@@ -7,7 +7,6 @@ import { findFlowerForMood, ArtFlower } from "@/data/artFlowers";
 const Index = () => {
   const [flower, setFlower] = useState<ArtFlower | null>(null);
   const [userMood, setUserMood] = useState("");
-  const [isFlowerHovered, setIsFlowerHovered] = useState(false);
 
   const handleMoodSubmit = (mood: string) => {
     setUserMood(mood);
@@ -18,17 +17,10 @@ const Index = () => {
   const handleReset = () => {
     setFlower(null);
     setUserMood("");
-    setIsFlowerHovered(false);
   };
 
   return (
-    <div
-      className={`bg-background flex flex-col transition-all duration-500 ${
-        flower && !isFlowerHovered
-          ? "h-screen overflow-hidden"
-          : "min-h-screen"
-      }`}
-    >
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <header className="py-4 px-6 text-center shrink-0">
         <motion.p
@@ -42,7 +34,7 @@ const Index = () => {
       </header>
 
       {/* Main content */}
-      <main className={`flex items-center justify-center ${!flower ? 'flex-1 py-6' : 'flex-1 py-0'}`}>
+      <main className={`flex items-start justify-center ${!flower ? 'flex-1 items-center' : 'pt-2 pb-6'}`}>
         <AnimatePresence mode="wait">
           {!flower ? (
             <motion.div
@@ -65,7 +57,6 @@ const Index = () => {
                 flower={flower}
                 userMood={userMood}
                 onReset={handleReset}
-                onHoverChange={setIsFlowerHovered}
               />
             </motion.div>
           )}
