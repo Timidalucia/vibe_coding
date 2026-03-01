@@ -17,6 +17,7 @@ import almondBlossomSourceImg from "@/assets/artworks/almond-blossom-source.jpg"
 import rosesSourceImg from "@/assets/artworks/roses-source.jpg";
 import peoniesSourceImg from "@/assets/artworks/peonies-source.jpg";
 import boncompainAnemonesSourceImg from "@/assets/artworks/boncompain-anemones-source.jpg";
+import chrysanthemumsSourceImg from "@/assets/artworks/chrysanthemums-source.jpg";
 
 // New source paintings
 import oleandersSourceImg from "@/assets/artworks/oleanders-source.jpg";
@@ -67,7 +68,7 @@ export const artworkSourceImages: Record<string, string> = {
   "red-poppy": orientalPoppiesSourceImg,
   "almond-blossom": almondBlossomSourceImg,
   rose: rosesSourceImg,
-  chrysanthemum: chrysanthemumsImg,
+  chrysanthemum: chrysanthemumsSourceImg,
   peony: peoniesSourceImg,
   anemone: boncompainAnemonesSourceImg,
   // New entries

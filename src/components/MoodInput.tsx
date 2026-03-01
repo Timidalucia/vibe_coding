@@ -64,7 +64,7 @@ const MoodInput = ({ onSubmit }: MoodInputProps) => {
             disabled={!mood.trim()}
             className="rounded-full px-8 py-6 text-base font-sans font-medium gap-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 disabled:opacity-40"
           >
-            Find my flower
+            🌷 Flower s(c)ent
             <Send className="w-4 h-4" />
           </Button>
         </div>
