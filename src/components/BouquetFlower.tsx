@@ -12,11 +12,11 @@ interface BouquetFlowerProps {
   onClick: () => void;
 }
 
-/* Vase arrangement: 3 flowers fanned above the vase rim */
+/* Tight cluster: overlapping flowers emerging from the wrap */
 const positions = [
-  { rotate: -20, originX: -90, originY: 30 },   // left
-  { rotate: 0,   originX: 0,   originY: -10 },  // center
-  { rotate: 20,  originX: 90,  originY: 30 },   // right
+  { rotate: -14, originX: -50, originY: 35, z: 2 },   // left
+  { rotate: 2,   originX: 5,   originY: 5, z: 3 },    // center (front)
+  { rotate: 12,  originX: 50,  originY: 30, z: 1 },   // right
 ];
 
 const BouquetFlower = ({ flower, index, onClick }: BouquetFlowerProps) => {
@@ -83,8 +83,8 @@ const BouquetFlower = ({ flower, index, onClick }: BouquetFlowerProps) => {
       className="absolute cursor-pointer flex flex-col items-center"
       style={{
         left: "50%",
-        bottom: "38%",
-        zIndex: index === 1 ? 3 : 2,
+        bottom: "34%",
+        zIndex: isHovered ? 10 : pos.z,
         transformOrigin: "bottom center",
       }}
       initial={{
@@ -96,10 +96,10 @@ const BouquetFlower = ({ flower, index, onClick }: BouquetFlowerProps) => {
       }}
       animate={{
         x: pos.originX,
-        y: isHovered ? pos.originY - 24 : pos.originY,
+        y: isHovered ? pos.originY - 20 : pos.originY,
         rotate: pos.rotate,
         opacity: 1,
-        scale: isHovered ? 1.06 : 1,
+        scale: isHovered ? 1.08 : 1,
       }}
       transition={{
         type: "spring",
@@ -115,32 +115,9 @@ const BouquetFlower = ({ flower, index, onClick }: BouquetFlowerProps) => {
       tabIndex={0}
       aria-label={`View ${flower.name} from ${flower.artwork}`}
     >
-      {/* Flower image — uniform size */}
-      <div
-        className="relative w-[120px] h-[120px] md:w-[150px] md:h-[150px] flex items-center justify-center"
-      >
-        {cutoutReady ? (
-          <img
-            src={cutoutSrc}
-            alt={`${flower.name} — from ${flower.artwork}`}
-            className="drop-shadow-lg"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
-              /* Scale up small stickers to fill container */
-              minWidth: "90%",
-              minHeight: "90%",
-            }}
-          />
-        ) : (
-          <div className="w-16 h-16 rounded-full bg-muted animate-pulse" />
-        )}
-      </div>
-
-      {/* Name label — counter-rotate so text stays horizontal */}
+      {/* Name label ABOVE — counter-rotate so text stays horizontal */}
       <motion.span
-        className="font-serif italic text-muted-foreground text-xs md:text-sm mt-1 whitespace-nowrap"
+        className="font-serif italic text-muted-foreground text-[11px] md:text-xs mb-1 whitespace-nowrap"
         style={{ transform: `rotate(${-pos.rotate}deg)` }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -148,6 +125,19 @@ const BouquetFlower = ({ flower, index, onClick }: BouquetFlowerProps) => {
       >
         {flower.name}
       </motion.span>
+
+      {/* Flower image */}
+      <div className="relative w-[110px] h-[110px] md:w-[140px] md:h-[140px] flex items-center justify-center">
+        {cutoutReady ? (
+          <img
+            src={cutoutSrc}
+            alt={`${flower.name} — from ${flower.artwork}`}
+            className="drop-shadow-lg w-full h-full object-contain"
+          />
+        ) : (
+          <div className="w-14 h-14 rounded-full bg-muted animate-pulse" />
+        )}
+      </div>
     </motion.div>
   );
 };
