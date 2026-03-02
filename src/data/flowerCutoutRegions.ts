@@ -33,4 +33,19 @@ export const flowerCutoutRegions: Record<string, CutoutRegion> = {
   anemone: {
     x: 0.18, y: 0.06, w: 0.55, h: 0.68,
   },
+  lilac: {
+    x: 0.15, y: 0.05, w: 0.65, h: 0.80,
+  },
+  tulip: {
+    x: 0.15, y: 0.05, w: 0.60, h: 0.85,
+  },
+  wildflower: {
+    x: 0.10, y: 0.05, w: 0.70, h: 0.75,
+  },
+  daisy: {
+    x: 0.15, y: 0.02, w: 0.65, h: 0.90,
+  },
+  carnation: {
+    x: 0.15, y: 0.02, w: 0.65, h: 0.90,
+  },
 };

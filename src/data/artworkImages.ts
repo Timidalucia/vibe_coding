@@ -7,6 +7,11 @@ import rosesImg from "@/assets/artworks/roses.jpg";
 import chrysanthemumsImg from "@/assets/artworks/chrysanthemums.jpg";
 import peoniesImg from "@/assets/artworks/peonies.jpg";
 import boncompainAnemonesImg from "@/assets/artworks/boncompain-anemones.jpg";
+import boncompainLilasImg from "@/assets/artworks/boncompain-lilas.jpg";
+import boncompainTulipesImg from "@/assets/artworks/boncompain-tulipes.jpg";
+import boncompainBouquetChampsImg from "@/assets/artworks/boncompain-bouquet-champs.jpg";
+import vangoghDaisiesImg from "@/assets/artworks/vangogh-daisies.jpg";
+import vangoghCarnationsImg from "@/assets/artworks/vangogh-carnations.jpg";
 
 // Source paintings (full original artwork for hover reveal)
 import sunflowersSourceImg from "@/assets/artworks/sunflowers-source.jpg";
@@ -42,6 +47,11 @@ export const artworkImages: Record<string, string> = {
   chrysanthemum: chrysanthemumsImg,
   peony: peoniesImg,
   anemone: boncompainAnemonesImg,
+  lilac: boncompainLilasImg,
+  tulip: boncompainTulipesImg,
+  wildflower: boncompainBouquetChampsImg,
+  daisy: vangoghDaisiesImg,
+  carnation: vangoghCarnationsImg,
 };
 
 export const artworkSourceImages: Record<string, string> = {
@@ -54,6 +64,12 @@ export const artworkSourceImages: Record<string, string> = {
   chrysanthemum: chrysanthemumsImg,
   peony: peoniesSourceImg,
   anemone: boncompainAnemonesSourceImg,
+  // New entries use same image as display (source = display for lithographs/smaller works)
+  lilac: boncompainLilasImg,
+  tulip: boncompainTulipesImg,
+  wildflower: boncompainBouquetChampsImg,
+  daisy: vangoghDaisiesImg,
+  carnation: vangoghCarnationsImg,
 };
 
 export const artworkStickerImages: Record<string, string> = {
