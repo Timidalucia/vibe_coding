@@ -12,10 +12,11 @@ interface BouquetFlowerProps {
   onClick: () => void;
 }
 
+/* Vase arrangement: 3 flowers fanned above the vase rim */
 const positions = [
-  { rotate: -18, translateX: -110, translateY: 5 },   // left
-  { rotate: 0, translateX: 0, translateY: -25 },       // center (tallest)
-  { rotate: 18, translateX: 110, translateY: 5 },      // right
+  { rotate: -20, originX: -90, originY: 30 },   // left
+  { rotate: 0,   originX: 0,   originY: -10 },  // center
+  { rotate: 20,  originX: 90,  originY: 30 },   // right
 ];
 
 const BouquetFlower = ({ flower, index, onClick }: BouquetFlowerProps) => {
@@ -82,29 +83,30 @@ const BouquetFlower = ({ flower, index, onClick }: BouquetFlowerProps) => {
       className="absolute cursor-pointer flex flex-col items-center"
       style={{
         left: "50%",
-        bottom: "45%",
+        bottom: "38%",
         zIndex: index === 1 ? 3 : 2,
+        transformOrigin: "bottom center",
       }}
       initial={{
-        x: pos.translateX,
-        y: pos.translateY,
+        x: pos.originX,
+        y: pos.originY,
         rotate: pos.rotate,
         opacity: 0,
-        scale: 0.8,
+        scale: 0.85,
       }}
       animate={{
-        x: pos.translateX,
-        y: isHovered ? pos.translateY - 30 : pos.translateY,
+        x: pos.originX,
+        y: isHovered ? pos.originY - 24 : pos.originY,
         rotate: pos.rotate,
         opacity: 1,
-        scale: isHovered ? 1.08 : 1,
+        scale: isHovered ? 1.06 : 1,
       }}
       transition={{
         type: "spring",
-        stiffness: 300,
-        damping: 25,
-        opacity: { duration: 0.5, delay: index * 0.15 },
-        scale: { duration: 0.3 },
+        stiffness: 280,
+        damping: 22,
+        opacity: { duration: 0.5, delay: 0.2 + index * 0.12 },
+        scale: { duration: 0.25 },
       }}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
@@ -113,20 +115,39 @@ const BouquetFlower = ({ flower, index, onClick }: BouquetFlowerProps) => {
       tabIndex={0}
       aria-label={`View ${flower.name} from ${flower.artwork}`}
     >
+      {/* Flower image — uniform size */}
       <div
-        className="relative w-[130px] h-[170px] md:w-[160px] md:h-[210px] flex items-end justify-center"
-        style={{ transformOrigin: "bottom center" }}
+        className="relative w-[120px] h-[120px] md:w-[150px] md:h-[150px] flex items-center justify-center"
       >
         {cutoutReady ? (
           <img
             src={cutoutSrc}
             alt={`${flower.name} — from ${flower.artwork}`}
-            className="object-contain max-w-full max-h-full drop-shadow-lg"
+            className="drop-shadow-lg"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+              /* Scale up small stickers to fill container */
+              minWidth: "90%",
+              minHeight: "90%",
+            }}
           />
         ) : (
-          <div className="w-16 h-20 rounded-full bg-muted animate-pulse" />
+          <div className="w-16 h-16 rounded-full bg-muted animate-pulse" />
         )}
       </div>
+
+      {/* Name label — counter-rotate so text stays horizontal */}
+      <motion.span
+        className="font-serif italic text-muted-foreground text-xs md:text-sm mt-1 whitespace-nowrap"
+        style={{ transform: `rotate(${-pos.rotate}deg)` }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6 + index * 0.15, duration: 0.4 }}
+      >
+        {flower.name}
+      </motion.span>
     </motion.div>
   );
 };
