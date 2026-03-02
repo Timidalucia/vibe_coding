@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ArtFlower } from "@/data/artFlowers";
 import { artworkSourceImages, artworkCutoutImages, artworkStickerImages } from "@/data/artworkImages";
-import { extractCutout, CutoutRegion } from "@/lib/extractCutout";
+import { extractCutout } from "@/lib/extractCutout";
 import { flowerCutoutRegions } from "@/data/flowerCutoutRegions";
 import { removeStickerBackground } from "@/lib/removeStickerBackground";
 
@@ -59,21 +59,9 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
       return;
     }
 
-    // 3. Fall back to runtime segmentation (true contour cutout)
+    // 3. Fall back to runtime segmentation
     if (sourceSrc && region) {
       extractCutout(sourceSrc, region, 600).then((url) => {
-        if (url) {
-          setCutoutSrc(url);
-          setCutoutReady(true);
-        }
-      });
-      return;
-    }
-
-    // 4. If no region defined, run segmentation on full source with center crop
-    if (sourceSrc) {
-      const defaultRegion: CutoutRegion = { x: 0.15, y: 0.10, w: 0.65, h: 0.60 };
-      extractCutout(sourceSrc, defaultRegion, 600).then((url) => {
         if (url) {
           setCutoutSrc(url);
           setCutoutReady(true);
@@ -134,7 +122,6 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
               style={{
                 maxHeight: "85%",
                 maxWidth: "90%",
-                filter: "drop-shadow(2px 0 0 white) drop-shadow(-2px 0 0 white) drop-shadow(0 2px 0 white) drop-shadow(0 -2px 0 white) drop-shadow(0 4px 10px rgba(0,0,0,0.13))",
               }}
             />
           ) : (

@@ -21,6 +21,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      {/* Header */}
       <header className="py-4 px-6 text-center shrink-0">
         <motion.p
           className="font-serif text-sm tracking-[0.3em] uppercase text-muted-foreground"
@@ -32,6 +33,7 @@ const Index = () => {
         </motion.p>
       </header>
 
+      {/* Main content */}
       <main className={`flex items-start justify-center ${!flower ? 'flex-1 items-center' : 'pt-2 pb-6'}`}>
         <AnimatePresence mode="wait">
           {!flower ? (
@@ -61,6 +63,7 @@ const Index = () => {
         </AnimatePresence>
       </main>
 
+      {/* Footer */}
       <footer className="py-4 text-center shrink-0">
         <p className="text-muted-foreground/40 text-xs font-sans">
           Flowers from masterpieces, chosen for your heart
