@@ -19,19 +19,6 @@ interface BouquetResultProps {
   onReset: () => void;
 }
 
-// Spiral arrow SVG paths for each position (left, center, right)
-const arrowPaths = [
-  "M 18,95 C 8,70 20,40 32,28",
-  "M 50,100 C 48,78 52,55 50,32",
-  "M 82,95 C 92,70 80,40 68,28",
-];
-
-const arrowAnchors = [
-  { x: "12%", y: "52%", textAnchor: "start" as const },
-  { x: "50%", y: "58%", textAnchor: "middle" as const },
-  { x: "88%", y: "52%", textAnchor: "end" as const },
-];
-
 const BouquetResult = ({ flowers, userMood, onReset }: BouquetResultProps) => {
   const [selectedFlower, setSelectedFlower] = useState<ArtFlower | null>(null);
   const [modalWidth, setModalWidth] = useState<number | null>(null);
@@ -44,74 +31,7 @@ const BouquetResult = ({ flowers, userMood, onReset }: BouquetResultProps) => {
       className="flex flex-col items-center w-full max-w-[800px] mx-auto px-4"
     >
       {/* Bouquet stage */}
-      <div className="relative w-full h-[380px] md:h-[460px] mb-2">
-        {/* Spiral name arrows */}
-        <svg
-          className="absolute inset-0 w-full h-full pointer-events-none"
-          viewBox="0 0 100 120"
-          preserveAspectRatio="xMidYMid meet"
-          style={{ zIndex: 10 }}
-        >
-          {flowers.map((flower, i) => {
-            const anchor = arrowAnchors[i];
-            return (
-              <motion.g
-                key={flower.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 + i * 0.2, duration: 0.5 }}
-              >
-                {/* Arrow path */}
-                <path
-                  d={arrowPaths[i]}
-                  fill="none"
-                  stroke="hsl(var(--muted-foreground) / 0.35)"
-                  strokeWidth="0.4"
-                  strokeDasharray="2,1.5"
-                  markerEnd={`url(#arrowhead-${i})`}
-                />
-                {/* Arrowhead marker */}
-                <defs>
-                  <marker
-                    id={`arrowhead-${i}`}
-                    markerWidth="4"
-                    markerHeight="3"
-                    refX="3"
-                    refY="1.5"
-                    orient="auto"
-                  >
-                    <polygon
-                      points="0 0, 4 1.5, 0 3"
-                      fill="hsl(var(--muted-foreground) / 0.35)"
-                    />
-                  </marker>
-                </defs>
-              </motion.g>
-            );
-          })}
-        </svg>
-
-        {/* Name labels */}
-        {flowers.map((flower, i) => {
-          const anchor = arrowAnchors[i];
-          return (
-            <motion.div
-              key={`label-${flower.id}`}
-              className="absolute font-serif italic text-muted-foreground text-xs md:text-sm"
-              style={{
-                left: anchor.x,
-                top: anchor.y,
-                transform: i === 0 ? "translateX(-100%)" : i === 2 ? "translateX(0%)" : "translateX(-50%)",
-              }}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1 + i * 0.15, duration: 0.4 }}
-            >
-              {flower.name}
-            </motion.div>
-          );
-        })}
-
+      <div className="relative w-full h-[380px] md:h-[440px] mb-2">
         {/* Flowers */}
         {flowers.map((flower, i) => (
           <BouquetFlower
@@ -122,41 +42,48 @@ const BouquetResult = ({ flowers, userMood, onReset }: BouquetResultProps) => {
           />
         ))}
 
-        {/* Paper wrap — cone shape */}
+        {/* Vase */}
         <motion.div
           className="absolute bottom-0 left-1/2 -translate-x-1/2"
           style={{
-            width: "220px",
-            height: "120px",
+            width: "200px",
+            height: "130px",
             zIndex: 4,
           }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
         >
           <svg
-            viewBox="0 0 220 120"
+            viewBox="0 0 200 130"
             className="w-full h-full"
-            style={{ filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.08))" }}
+            style={{ filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.06))" }}
           >
-            {/* Main paper cone */}
+            {/* Vase body — elegant trapezoid */}
             <path
-              d="M 20,0 L 200,0 L 140,115 Q 110,125 80,115 Z"
-              fill="hsl(35, 25%, 88%)"
-              stroke="hsl(35, 20%, 78%)"
+              d="M 45,8 L 155,8 L 138,125 Q 100,132 62,125 Z"
+              fill="hsl(35, 22%, 87%)"
+              stroke="hsl(35, 18%, 78%)"
               strokeWidth="0.8"
             />
-            {/* Fold line */}
-            <path
-              d="M 40,0 Q 100,30 180,0"
-              fill="none"
-              stroke="hsl(35, 20%, 80%)"
-              strokeWidth="0.5"
-              strokeDasharray="3,2"
+            {/* Rim */}
+            <ellipse
+              cx="100"
+              cy="8"
+              rx="56"
+              ry="6"
+              fill="hsl(35, 20%, 84%)"
+              stroke="hsl(35, 18%, 78%)"
+              strokeWidth="0.6"
             />
-            {/* Subtle texture lines */}
-            <path d="M 60,10 L 100,100" stroke="hsl(35, 15%, 84%)" strokeWidth="0.3" opacity="0.5" />
-            <path d="M 140,10 L 115,100" stroke="hsl(35, 15%, 84%)" strokeWidth="0.3" opacity="0.5" />
+            {/* Subtle highlight */}
+            <path
+              d="M 70,20 Q 80,90 72,120"
+              fill="none"
+              stroke="hsl(35, 15%, 92%)"
+              strokeWidth="2"
+              opacity="0.6"
+            />
           </svg>
         </motion.div>
       </div>
@@ -166,7 +93,7 @@ const BouquetResult = ({ flowers, userMood, onReset }: BouquetResultProps) => {
         className="text-muted-foreground text-center text-sm font-sans mb-2"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.6, duration: 0.4 }}
+        transition={{ delay: 0.5, duration: 0.4 }}
       >
         A bouquet from the masters, chosen for your heart
       </motion.p>
@@ -175,7 +102,7 @@ const BouquetResult = ({ flowers, userMood, onReset }: BouquetResultProps) => {
         className="w-12 h-px bg-border mb-3"
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
-        transition={{ delay: 0.7, duration: 0.4 }}
+        transition={{ delay: 0.6, duration: 0.4 }}
       />
 
       {/* Combined healing message */}
@@ -183,7 +110,7 @@ const BouquetResult = ({ flowers, userMood, onReset }: BouquetResultProps) => {
         className="w-full max-w-lg rounded-2xl p-4 md:p-5 mb-5 bg-card/50"
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.9, duration: 0.5 }}
+        transition={{ delay: 0.8, duration: 0.5 }}
       >
         <p className="font-serif italic text-xs text-muted-foreground mb-2">
           Why these flowers are for you
@@ -200,7 +127,7 @@ const BouquetResult = ({ flowers, userMood, onReset }: BouquetResultProps) => {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.1, duration: 0.4 }}
+        transition={{ delay: 1, duration: 0.4 }}
       >
         <Button
           onClick={onReset}
