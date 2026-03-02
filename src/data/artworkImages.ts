@@ -36,6 +36,11 @@ import rosesStickerImg from "@/assets/artworks/roses-sticker.png";
 import chrysanthemumsStickerImg from "@/assets/artworks/chrysanthemums-sticker.png";
 import peoniesStickerImg from "@/assets/artworks/peonies-sticker.png";
 import boncompainAnemonesStickerImg from "@/assets/artworks/boncompain-anemones-sticker.png";
+import boncompainLilasStickerImg from "@/assets/artworks/boncompain-lilas-sticker.png";
+import boncompainTulipesStickerImg from "@/assets/artworks/boncompain-tulipes-sticker.png";
+import boncompainBouquetChampsStickerImg from "@/assets/artworks/boncompain-bouquet-champs-sticker.png";
+import vangoghDaisiesStickerImg from "@/assets/artworks/vangogh-daisies-sticker.png";
+import vangoghCarnationsStickerImg from "@/assets/artworks/vangogh-carnations-sticker.png";
 
 export const artworkImages: Record<string, string> = {
   sunflower: sunflowersImg,
@@ -64,7 +69,6 @@ export const artworkSourceImages: Record<string, string> = {
   chrysanthemum: chrysanthemumsImg,
   peony: peoniesSourceImg,
   anemone: boncompainAnemonesSourceImg,
-  // New entries use same image as display (source = display for lithographs/smaller works)
   lilac: boncompainLilasImg,
   tulip: boncompainTulipesImg,
   wildflower: boncompainBouquetChampsImg,
@@ -82,6 +86,11 @@ export const artworkStickerImages: Record<string, string> = {
   chrysanthemum: chrysanthemumsStickerImg,
   peony: peoniesStickerImg,
   anemone: boncompainAnemonesStickerImg,
+  lilac: boncompainLilasStickerImg,
+  tulip: boncompainTulipesStickerImg,
+  wildflower: boncompainBouquetChampsStickerImg,
+  daisy: vangoghDaisiesStickerImg,
+  carnation: vangoghCarnationsStickerImg,
 };
 
 /** Pre-made transparent cutouts — used instead of runtime segmentation when available */
