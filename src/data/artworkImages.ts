@@ -15,9 +15,9 @@ import irisesSourceImg from "@/assets/artworks/irises-source.jpg";
 import orientalPoppiesSourceImg from "@/assets/artworks/oriental-poppies-source.jpg";
 import almondBlossomSourceImg from "@/assets/artworks/almond-blossom-source.jpg";
 import rosesSourceImg from "@/assets/artworks/roses-source.jpg";
-import peoniesSourceImg from "@/assets/artworks/peonies-source.jpg";
-import boncompainAnemonesSourceImg from "@/assets/artworks/boncompain-anemones-source.jpg";
 import chrysanthemumsSourceImg from "@/assets/artworks/chrysanthemums-source.jpg";
+import manetPeoniesSourceImg from "@/assets/artworks/manet-peonies-source.jpg";
+import renoirAnemonesSourceImg from "@/assets/artworks/renoir-anemones-source.jpg";
 
 // New source paintings
 import oleandersSourceImg from "@/assets/artworks/oleanders-source.jpg";
@@ -46,8 +46,6 @@ import orientalPoppiesStickerImg from "@/assets/artworks/oriental-poppies-sticke
 import almondBlossomStickerImg from "@/assets/artworks/almond-blossom-sticker.png";
 import rosesStickerImg from "@/assets/artworks/roses-sticker.png";
 import chrysanthemumsStickerImg from "@/assets/artworks/chrysanthemums-sticker.png";
-import boncompainAnemonesStickerImg from "@/assets/artworks/boncompain-anemones-sticker.png";
-import lotusStickerImg from "@/assets/artworks/lotus-sticker.png";
 
 export const artworkImages: Record<string, string> = {
   sunflower: sunflowersImg,
@@ -69,8 +67,8 @@ export const artworkSourceImages: Record<string, string> = {
   "almond-blossom": almondBlossomSourceImg,
   rose: rosesSourceImg,
   chrysanthemum: chrysanthemumsSourceImg,
-  peony: peoniesSourceImg,
-  anemone: boncompainAnemonesSourceImg,
+  peony: manetPeoniesSourceImg,
+  anemone: renoirAnemonesSourceImg,
   // New entries
   oleander: oleandersSourceImg,
   dahlia: dahliaSourceImg,
@@ -95,7 +93,6 @@ export const artworkStickerImages: Record<string, string> = {
   "almond-blossom": almondBlossomStickerImg,
   rose: rosesStickerImg,
   chrysanthemum: chrysanthemumsStickerImg,
-  anemone: boncompainAnemonesStickerImg,
 };
 
 /** Pre-made transparent cutouts */
