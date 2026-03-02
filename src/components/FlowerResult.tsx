@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ArtFlower } from "@/data/artFlowers";
 import { artworkSourceImages, artworkCutoutImages, artworkStickerImages } from "@/data/artworkImages";
-import { extractCutout } from "@/lib/extractCutout";
+import { extractCutout, CutoutRegion } from "@/lib/extractCutout";
 import { flowerCutoutRegions } from "@/data/flowerCutoutRegions";
 import { removeStickerBackground } from "@/lib/removeStickerBackground";
 
@@ -59,25 +59,26 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
       return;
     }
 
-    // 3. Fall back to runtime segmentation
+    // 3. Fall back to runtime segmentation (true contour cutout)
     if (sourceSrc && region) {
       extractCutout(sourceSrc, region, 600).then((url) => {
         if (url) {
           setCutoutSrc(url);
-          setCutoutReady(true);
-        } else if (sourceSrc) {
-          // Fallback: use source painting directly
-          setCutoutSrc(sourceSrc);
           setCutoutReady(true);
         }
       });
       return;
     }
 
-    // 4. Final fallback: use source painting as-is
+    // 4. If no region defined, run segmentation on full source with center crop
     if (sourceSrc) {
-      setCutoutSrc(sourceSrc);
-      setCutoutReady(true);
+      const defaultRegion: CutoutRegion = { x: 0.15, y: 0.10, w: 0.65, h: 0.60 };
+      extractCutout(sourceSrc, defaultRegion, 600).then((url) => {
+        if (url) {
+          setCutoutSrc(url);
+          setCutoutReady(true);
+        }
+      });
     }
   }, [sourceSrc, region, premadeCutout, flower.id]);
 
