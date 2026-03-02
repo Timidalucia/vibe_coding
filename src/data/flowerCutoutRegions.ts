@@ -28,7 +28,7 @@ export const flowerCutoutRegions: Record<string, CutoutRegion> = {
     x: 0.15, y: 0.02, w: 0.60, h: 0.62,
   },
   peony: {
-    x: 0.15, y: 0.05, w: 0.70, h: 0.55,
+    x: 0.25, y: 0.05, w: 0.45, h: 0.55,
   },
   anemone: {
     x: 0.18, y: 0.06, w: 0.55, h: 0.68,

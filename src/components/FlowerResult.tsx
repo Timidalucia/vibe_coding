@@ -122,6 +122,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
               style={{
                 maxHeight: "85%",
                 maxWidth: "90%",
+                filter: "drop-shadow(2px 0 0 white) drop-shadow(-2px 0 0 white) drop-shadow(0 2px 0 white) drop-shadow(0 -2px 0 white) drop-shadow(0 4px 10px rgba(0,0,0,0.13))",
               }}
             />
           ) : (

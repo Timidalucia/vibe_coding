@@ -115,7 +115,10 @@ const BouquetFlower = ({ flower, index, onClick }: BouquetFlowerProps) => {
           <img
             src={cutoutSrc}
             alt={`${flower.name} — from ${flower.artwork}`}
-            className="drop-shadow-lg w-full h-full object-contain"
+            className="w-full h-full object-contain"
+            style={{
+              filter: "drop-shadow(2px 0 0 white) drop-shadow(-2px 0 0 white) drop-shadow(0 2px 0 white) drop-shadow(0 -2px 0 white) drop-shadow(0 4px 10px rgba(0,0,0,0.13))",
+            }}
           />
         ) : (
           <div className="w-14 h-14 rounded-full bg-muted animate-pulse" />
