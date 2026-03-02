@@ -29,6 +29,7 @@ import orientalPoppiesStickerImg from "@/assets/artworks/oriental-poppies-sticke
 import almondBlossomStickerImg from "@/assets/artworks/almond-blossom-sticker.png";
 import rosesStickerImg from "@/assets/artworks/roses-sticker.png";
 import chrysanthemumsStickerImg from "@/assets/artworks/chrysanthemums-sticker.png";
+import peoniesStickerImg from "@/assets/artworks/peonies-sticker.png";
 import boncompainAnemonesStickerImg from "@/assets/artworks/boncompain-anemones-sticker.png";
 
 export const artworkImages: Record<string, string> = {
@@ -63,6 +64,7 @@ export const artworkStickerImages: Record<string, string> = {
   "almond-blossom": almondBlossomStickerImg,
   rose: rosesStickerImg,
   chrysanthemum: chrysanthemumsStickerImg,
+  peony: peoniesStickerImg,
   anemone: boncompainAnemonesStickerImg,
 };
 
