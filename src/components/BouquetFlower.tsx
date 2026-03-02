@@ -8,15 +8,15 @@ import { flowerCutoutRegions } from "@/data/flowerCutoutRegions";
 
 interface BouquetFlowerProps {
   flower: ArtFlower;
-  index: number; // 0=left, 1=center, 2=right
+  index: number;
   onClick: () => void;
 }
 
-/* Tight cluster: overlapping flowers emerging from the wrap */
+/* Tightly clustered — overlapping, emerging from wrap opening */
 const positions = [
-  { rotate: -14, originX: -50, originY: 35, z: 2 },   // left
-  { rotate: 2,   originX: 5,   originY: 5, z: 3 },    // center (front)
-  { rotate: 12,  originX: 50,  originY: 30, z: 1 },   // right
+  { rotate: -18, x: -55, y: -10, z: 2 },   // left, tilted out
+  { rotate: 4,   x: 0,   y: -30, z: 3 },   // center, tallest
+  { rotate: 15,  x: 45,  y: -5,  z: 1 },   // right, tilted out
 ];
 
 const BouquetFlower = ({ flower, index, onClick }: BouquetFlowerProps) => {
@@ -44,20 +44,14 @@ const BouquetFlower = ({ flower, index, onClick }: BouquetFlowerProps) => {
     const stickerSrc = artworkStickerImages[flower.id];
     if (stickerSrc) {
       removeStickerBackground(stickerSrc).then((url) => {
-        if (url) {
-          setCutoutSrc(url);
-          setCutoutReady(true);
-        }
+        if (url) { setCutoutSrc(url); setCutoutReady(true); }
       });
       return;
     }
 
     if (sourceSrc && region) {
       extractCutout(sourceSrc, region, 400).then((url) => {
-        if (url) {
-          setCutoutSrc(url);
-          setCutoutReady(true);
-        }
+        if (url) { setCutoutSrc(url); setCutoutReady(true); }
       });
     }
   }, [sourceSrc, region, premadeCutout, flower.id]);
@@ -83,20 +77,20 @@ const BouquetFlower = ({ flower, index, onClick }: BouquetFlowerProps) => {
       className="absolute cursor-pointer flex flex-col items-center"
       style={{
         left: "50%",
-        bottom: "34%",
+        top: "28%",
         zIndex: isHovered ? 10 : pos.z,
         transformOrigin: "bottom center",
       }}
       initial={{
-        x: pos.originX,
-        y: pos.originY,
+        x: pos.x,
+        y: pos.y,
         rotate: pos.rotate,
         opacity: 0,
         scale: 0.85,
       }}
       animate={{
-        x: pos.originX,
-        y: isHovered ? pos.originY - 20 : pos.originY,
+        x: pos.x,
+        y: isHovered ? pos.y - 14 : pos.y,
         rotate: pos.rotate,
         opacity: 1,
         scale: isHovered ? 1.08 : 1,
@@ -115,19 +109,8 @@ const BouquetFlower = ({ flower, index, onClick }: BouquetFlowerProps) => {
       tabIndex={0}
       aria-label={`View ${flower.name} from ${flower.artwork}`}
     >
-      {/* Name label ABOVE — counter-rotate so text stays horizontal */}
-      <motion.span
-        className="font-serif italic text-muted-foreground text-[11px] md:text-xs mb-1 whitespace-nowrap"
-        style={{ transform: `rotate(${-pos.rotate}deg)` }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 + index * 0.15, duration: 0.4 }}
-      >
-        {flower.name}
-      </motion.span>
-
       {/* Flower image */}
-      <div className="relative w-[110px] h-[110px] md:w-[140px] md:h-[140px] flex items-center justify-center">
+      <div className="relative w-[120px] h-[120px] md:w-[150px] md:h-[150px] flex items-center justify-center">
         {cutoutReady ? (
           <img
             src={cutoutSrc}
@@ -138,6 +121,17 @@ const BouquetFlower = ({ flower, index, onClick }: BouquetFlowerProps) => {
           <div className="w-14 h-14 rounded-full bg-muted animate-pulse" />
         )}
       </div>
+
+      {/* Name label below */}
+      <motion.span
+        className="font-serif italic text-muted-foreground text-[11px] md:text-xs mt-1 whitespace-nowrap"
+        style={{ transform: `rotate(${-pos.rotate}deg)` }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6 + index * 0.15, duration: 0.4 }}
+      >
+        {flower.name}
+      </motion.span>
     </motion.div>
   );
 };

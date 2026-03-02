@@ -32,8 +32,8 @@ const BouquetResult = ({ flowers, userMood, onReset }: BouquetResultProps) => {
       className="flex flex-col items-center w-full max-w-[800px] mx-auto px-4"
     >
       {/* Bouquet stage */}
-      <div className="relative w-full h-[380px] md:h-[440px] mb-2">
-        {/* Flowers */}
+      <div className="relative w-[320px] md:w-[380px] h-[520px] md:h-[600px] mb-2 mx-auto">
+        {/* Flowers — positioned above the wrap opening */}
         {flowers.map((flower, i) => (
           <BouquetFlower
             key={flower.id}
@@ -43,12 +43,12 @@ const BouquetResult = ({ flowers, userMood, onReset }: BouquetResultProps) => {
           />
         ))}
 
-        {/* Paper wrap */}
+        {/* Paper wrap — bouquet cone shape */}
         <motion.div
           className="absolute bottom-0 left-1/2 -translate-x-1/2"
           style={{
-            width: "240px",
-            height: "150px",
+            width: "300px",
+            height: "360px",
             zIndex: 4,
           }}
           initial={{ opacity: 0, y: 30 }}
@@ -56,40 +56,143 @@ const BouquetResult = ({ flowers, userMood, onReset }: BouquetResultProps) => {
           transition={{ delay: 0.15, duration: 0.5 }}
         >
           <svg
-            viewBox="0 0 240 150"
+            viewBox="0 0 300 360"
             className="w-full h-full"
-            style={{ filter: "drop-shadow(0 4px 14px rgba(0,0,0,0.07))" }}
+            style={{ filter: "drop-shadow(0 6px 20px rgba(0,0,0,0.08))" }}
           >
             <defs>
-              <clipPath id="wrapClip">
-                <path d="M 25,0 L 215,0 L 155,145 Q 120,155 85,145 Z" />
+              {/* Main wrap body */}
+              <clipPath id="wrapBody">
+                <path d="
+                  M 40,0
+                  C 30,0 15,10 20,30
+                  L 20,30
+                  Q 15,40 30,60
+                  L 110,340
+                  Q 130,360 150,360
+                  Q 170,360 190,340
+                  L 270,60
+                  Q 285,40 280,30
+                  L 280,30
+                  C 285,10 270,0 260,0
+                  Z
+                " />
+              </clipPath>
+              {/* Left flap that folds up */}
+              <clipPath id="wrapFlapLeft">
+                <path d="
+                  M 20,30
+                  Q 5,20 10,5
+                  Q 15,-10 40,0
+                  L 40,0
+                  Q 60,10 80,40
+                  L 60,80
+                  Q 30,50 20,30
+                  Z
+                " />
+              </clipPath>
+              {/* Right flap — taller, like reference */}
+              <clipPath id="wrapFlapRight">
+                <path d="
+                  M 260,0
+                  Q 285,-10 290,5
+                  Q 295,25 280,30
+                  Q 270,50 250,70
+                  L 220,30
+                  Q 240,10 260,0
+                  Z
+                " />
               </clipPath>
             </defs>
-            {/* Paper texture fill */}
+
+            {/* Main body fill */}
             <image
               href={paperTexture}
-              x="0" y="0"
-              width="240" height="150"
+              x="-20" y="-20"
+              width="340" height="400"
               preserveAspectRatio="xMidYMid slice"
-              clipPath="url(#wrapClip)"
+              clipPath="url(#wrapBody)"
+              opacity="0.9"
+            />
+            <path
+              d="M 40,0 C 30,0 15,10 20,30 L 20,30 Q 15,40 30,60 L 110,340 Q 130,360 150,360 Q 170,360 190,340 L 270,60 Q 285,40 280,30 L 280,30 C 285,10 270,0 260,0 Z"
+              fill="hsl(35, 25%, 92%)"
+              opacity="0.3"
+            />
+            <path
+              d="M 40,0 C 30,0 15,10 20,30 L 20,30 Q 15,40 30,60 L 110,340 Q 130,360 150,360 Q 170,360 190,340 L 270,60 Q 285,40 280,30 L 280,30 C 285,10 270,0 260,0 Z"
+              fill="none"
+              stroke="hsl(35, 18%, 80%)"
+              strokeWidth="0.8"
+            />
+
+            {/* Left flap */}
+            <image
+              href={paperTexture}
+              x="-20" y="-30"
+              width="200" height="200"
+              preserveAspectRatio="xMidYMid slice"
+              clipPath="url(#wrapFlapLeft)"
               opacity="0.85"
             />
-            {/* Overlay tint */}
             <path
-              d="M 25,0 L 215,0 L 155,145 Q 120,155 85,145 Z"
-              fill="hsl(35, 25%, 90%)"
-              opacity="0.35"
+              d="M 20,30 Q 5,20 10,5 Q 15,-10 40,0 L 40,0 Q 60,10 80,40 L 60,80 Q 30,50 20,30 Z"
+              fill="hsl(35, 20%, 88%)"
+              opacity="0.25"
             />
-            {/* Outline */}
-            <path
-              d="M 25,0 L 215,0 L 155,145 Q 120,155 85,145 Z"
-              fill="none"
-              stroke="hsl(35, 18%, 78%)"
-              strokeWidth="0.7"
+
+            {/* Right flap */}
+            <image
+              href={paperTexture}
+              x="160" y="-30"
+              width="200" height="200"
+              preserveAspectRatio="xMidYMid slice"
+              clipPath="url(#wrapFlapRight)"
+              opacity="0.85"
             />
-            {/* Fold crease */}
             <path
-              d="M 50,0 Q 120,35 190,0"
+              d="M 260,0 Q 285,-10 290,5 Q 295,25 280,30 Q 270,50 250,70 L 220,30 Q 240,10 260,0 Z"
+              fill="hsl(35, 20%, 88%)"
+              opacity="0.25"
+            />
+
+            {/* Ribbon bow */}
+            <g transform="translate(150, 255)">
+              {/* Ribbon tails */}
+              <path
+                d="M -5,8 Q -25,40 -35,65"
+                fill="none"
+                stroke="hsl(210, 30%, 70%)"
+                strokeWidth="4"
+                strokeLinecap="round"
+              />
+              <path
+                d="M 5,8 Q 25,45 40,60"
+                fill="none"
+                stroke="hsl(210, 30%, 70%)"
+                strokeWidth="4"
+                strokeLinecap="round"
+              />
+              {/* Bow loops */}
+              <ellipse cx="-18" cy="-2" rx="18" ry="8"
+                fill="hsl(210, 30%, 75%)"
+                transform="rotate(-15, -18, -2)"
+                opacity="0.85"
+              />
+              <ellipse cx="18" cy="-2" rx="18" ry="8"
+                fill="hsl(210, 30%, 75%)"
+                transform="rotate(15, 18, -2)"
+                opacity="0.85"
+              />
+              {/* Knot center */}
+              <ellipse cx="0" cy="2" rx="6" ry="5"
+                fill="hsl(210, 30%, 68%)"
+              />
+            </g>
+
+            {/* Subtle fold crease */}
+            <path
+              d="M 60,40 Q 150,70 240,40"
               fill="none"
               stroke="hsl(35, 15%, 80%)"
               strokeWidth="0.5"
@@ -116,7 +219,7 @@ const BouquetResult = ({ flowers, userMood, onReset }: BouquetResultProps) => {
         transition={{ delay: 0.6, duration: 0.4 }}
       />
 
-      {/* Combined healing message */}
+      {/* Healing message */}
       <motion.div
         className="w-full max-w-lg rounded-2xl p-4 md:p-5 mb-5 bg-card/50"
         initial={{ opacity: 0, y: 15 }}
@@ -150,7 +253,7 @@ const BouquetResult = ({ flowers, userMood, onReset }: BouquetResultProps) => {
         </Button>
       </motion.div>
 
-      {/* Detail modal for clicked flower */}
+      {/* Detail modal */}
       <Dialog open={!!selectedFlower} onOpenChange={(open) => !open && setSelectedFlower(null)}>
         {selectedFlower && (
           <DialogContent
