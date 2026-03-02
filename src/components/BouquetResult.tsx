@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArtFlower } from "@/data/artFlowers";
 import { artworkSourceImages } from "@/data/artworkImages";
+import paperTexture from "@/assets/paper-texture.jpg";
 import BouquetFlower from "@/components/BouquetFlower";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
@@ -42,47 +43,57 @@ const BouquetResult = ({ flowers, userMood, onReset }: BouquetResultProps) => {
           />
         ))}
 
-        {/* Vase */}
+        {/* Paper wrap */}
         <motion.div
           className="absolute bottom-0 left-1/2 -translate-x-1/2"
           style={{
-            width: "200px",
-            height: "130px",
+            width: "240px",
+            height: "150px",
             zIndex: 4,
           }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
+          transition={{ delay: 0.15, duration: 0.5 }}
         >
           <svg
-            viewBox="0 0 200 130"
+            viewBox="0 0 240 150"
             className="w-full h-full"
-            style={{ filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.06))" }}
+            style={{ filter: "drop-shadow(0 4px 14px rgba(0,0,0,0.07))" }}
           >
-            {/* Vase body — elegant trapezoid */}
-            <path
-              d="M 45,8 L 155,8 L 138,125 Q 100,132 62,125 Z"
-              fill="hsl(35, 22%, 87%)"
-              stroke="hsl(35, 18%, 78%)"
-              strokeWidth="0.8"
+            <defs>
+              <clipPath id="wrapClip">
+                <path d="M 25,0 L 215,0 L 155,145 Q 120,155 85,145 Z" />
+              </clipPath>
+            </defs>
+            {/* Paper texture fill */}
+            <image
+              href={paperTexture}
+              x="0" y="0"
+              width="240" height="150"
+              preserveAspectRatio="xMidYMid slice"
+              clipPath="url(#wrapClip)"
+              opacity="0.85"
             />
-            {/* Rim */}
-            <ellipse
-              cx="100"
-              cy="8"
-              rx="56"
-              ry="6"
-              fill="hsl(35, 20%, 84%)"
-              stroke="hsl(35, 18%, 78%)"
-              strokeWidth="0.6"
-            />
-            {/* Subtle highlight */}
+            {/* Overlay tint */}
             <path
-              d="M 70,20 Q 80,90 72,120"
+              d="M 25,0 L 215,0 L 155,145 Q 120,155 85,145 Z"
+              fill="hsl(35, 25%, 90%)"
+              opacity="0.35"
+            />
+            {/* Outline */}
+            <path
+              d="M 25,0 L 215,0 L 155,145 Q 120,155 85,145 Z"
               fill="none"
-              stroke="hsl(35, 15%, 92%)"
-              strokeWidth="2"
-              opacity="0.6"
+              stroke="hsl(35, 18%, 78%)"
+              strokeWidth="0.7"
+            />
+            {/* Fold crease */}
+            <path
+              d="M 50,0 Q 120,35 190,0"
+              fill="none"
+              stroke="hsl(35, 15%, 80%)"
+              strokeWidth="0.5"
+              strokeDasharray="4,3"
             />
           </svg>
         </motion.div>
