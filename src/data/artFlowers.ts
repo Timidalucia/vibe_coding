@@ -113,7 +113,7 @@ export const artFlowers: ArtFlower[] = [
     name: "Anemone",
     artwork: "Bouquet d'Anémones",
     artist: "Pierre Boncompain",
-    year: "1990",
+    year: "1980",
     moods: ["brave", "bold", "passionate", "alive", "intense", "determined", "fierce"],
     description: "Boncompain's anemones burst with Mediterranean warmth — bold reds, blues, and purples arranged with the joyful spontaneity of a Provençal afternoon. His Fauvist-inspired palette celebrates color as pure emotion.",
     healingMessage: "This vivid anemone is for the fire in you. Boncompain paints with unapologetic joy, layering bold color upon bold color because life is too short for muted tones. Whatever you're feeling fiercely right now — that intensity is your gift. Let it bloom.",
