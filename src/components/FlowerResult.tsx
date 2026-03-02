@@ -65,8 +65,19 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
         if (url) {
           setCutoutSrc(url);
           setCutoutReady(true);
+        } else if (sourceSrc) {
+          // Fallback: use source painting directly
+          setCutoutSrc(sourceSrc);
+          setCutoutReady(true);
         }
       });
+      return;
+    }
+
+    // 4. Final fallback: use source painting as-is
+    if (sourceSrc) {
+      setCutoutSrc(sourceSrc);
+      setCutoutReady(true);
     }
   }, [sourceSrc, region, premadeCutout, flower.id]);
 
