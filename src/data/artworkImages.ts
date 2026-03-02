@@ -103,5 +103,9 @@ export const artworkStickerImages: Record<string, string> = {
 /** Pre-made transparent cutouts — used instead of runtime segmentation when available */
 export const artworkCutoutImages: Record<string, string> = {
   rose: rosesCutoutImg,
-  sunflower: sunflowerCutoutImg,
+  sunflower: sunflowersStickerImg,
+  "almond-blossom": almondBlossomStickerImg,
+  iris: irisesStickerImg,
+  oleander: vangoghOleandersStickerImg,
+  "golden-bouquet": boncompainBouquetJauneStickerImg,
 };
