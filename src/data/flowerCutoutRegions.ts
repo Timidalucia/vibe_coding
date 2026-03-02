@@ -24,8 +24,8 @@ export const flowerCutoutRegions: Record<string, CutoutRegion> = {
   rose: {
     x: 0.24, y: 0.10, w: 0.48, h: 0.62,
   },
-  chrysanthemum: {
-    x: 0.15, y: 0.02, w: 0.60, h: 0.62,
+  oleander: {
+    x: 0.10, y: 0.05, w: 0.80, h: 0.85,
   },
   peony: {
     x: 0.15, y: 0.05, w: 0.70, h: 0.55,
@@ -41,6 +41,9 @@ export const flowerCutoutRegions: Record<string, CutoutRegion> = {
   },
   wildflower: {
     x: 0.10, y: 0.05, w: 0.70, h: 0.75,
+  },
+  "golden-bouquet": {
+    x: 0.15, y: 0.05, w: 0.70, h: 0.85,
   },
   daisy: {
     x: 0.15, y: 0.02, w: 0.65, h: 0.90,
