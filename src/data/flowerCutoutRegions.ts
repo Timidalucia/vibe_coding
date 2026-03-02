@@ -42,6 +42,9 @@ export const flowerCutoutRegions: Record<string, CutoutRegion> = {
   wildflower: {
     x: 0.10, y: 0.05, w: 0.70, h: 0.75,
   },
+  "golden-bouquet": {
+    x: 0.15, y: 0.05, w: 0.70, h: 0.85,
+  },
   daisy: {
     x: 0.15, y: 0.02, w: 0.65, h: 0.90,
   },
