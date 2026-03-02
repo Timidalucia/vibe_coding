@@ -1,21 +1,21 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import MoodInput from "@/components/MoodInput";
-import BouquetResult from "@/components/BouquetResult";
-import { findFlowersForMood, ArtFlower } from "@/data/artFlowers";
+import FlowerResult from "@/components/FlowerResult";
+import { findFlowerForMood, ArtFlower } from "@/data/artFlowers";
 
 const Index = () => {
-  const [flowers, setFlowers] = useState<ArtFlower[] | null>(null);
+  const [flower, setFlower] = useState<ArtFlower | null>(null);
   const [userMood, setUserMood] = useState("");
 
   const handleMoodSubmit = (mood: string) => {
     setUserMood(mood);
-    const matched = findFlowersForMood(mood, 3);
-    setFlowers(matched);
+    const matched = findFlowerForMood(mood);
+    setFlower(matched);
   };
 
   const handleReset = () => {
-    setFlowers(null);
+    setFlower(null);
     setUserMood("");
   };
 
@@ -32,9 +32,9 @@ const Index = () => {
         </motion.p>
       </header>
 
-      <main className={`flex items-start justify-center ${!flowers ? 'flex-1 items-center' : 'pt-2 pb-6'}`}>
+      <main className={`flex items-start justify-center ${!flower ? 'flex-1 items-center' : 'pt-2 pb-6'}`}>
         <AnimatePresence mode="wait">
-          {!flowers ? (
+          {!flower ? (
             <motion.div
               key="input"
               exit={{ opacity: 0, y: -30 }}
@@ -51,8 +51,8 @@ const Index = () => {
               transition={{ duration: 0.5 }}
               className="w-full"
             >
-              <BouquetResult
-                flowers={flowers}
+              <FlowerResult
+                flower={flower}
                 userMood={userMood}
                 onReset={handleReset}
               />
