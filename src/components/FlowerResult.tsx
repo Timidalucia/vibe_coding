@@ -111,7 +111,7 @@ const FlowerResult = ({ flower, onReset }: FlowerResultProps) => {
 
         {/* Layer 2 (front): Flower cutout — always in DOM */}
         <div
-          className="absolute inset-0 w-full h-full flex items-center justify-center transition-opacity duration-[400ms] ease-in-out motion-reduce:transition-none"
+          className="absolute inset-0 w-full h-full flex items-center justify-center transition-opacity duration-[400ms] ease-in-out motion-reduce:transition-none bg-background"
           style={{ opacity: isHovered ? 0.1 : 1 }}
         >
           {cutoutReady ? (
